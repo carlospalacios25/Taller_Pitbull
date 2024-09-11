@@ -1,0 +1,48 @@
+body,html{
+    height: 100%;
+    width: 100%;
+}   
+.main-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container > .login,
+.main-container > .hero-body{
+    height: auto;
+    width: 100%;
+    max-width: 400px;
+    min-width: 300px;
+}
+.main-container {
+    text-align: center;
+}
+.hero-body {
+    margin-bottom: 20px;
+}
+.title {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 0;
+}
+.subtitle {
+    font-size: 24px;
+    margin: 10px 0;
+}
+.back-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+.back-button:hover {
+    background-color: #0056b3;
+}
+
