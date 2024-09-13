@@ -22,7 +22,7 @@
             </div>
             <div class="navbar-start">
             <a class="navbar-item" href="<?php echo APP_URL; ?>informationshop/" >
-                Informacion Alejo 
+                Informacion taller 
             </a>
             </div>
             </div>

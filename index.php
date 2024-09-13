@@ -33,6 +33,7 @@
             require_once "./app/views/inc/navbar_inicio.php";
             require_once "./app/views/content/".$vista."-view.php";
         }elseif($vista=="informationshop"){
+            require_once "./app/views/inc/navbar_inicio.php";
             require_once "./app/views/content/".$vista."-view.php";
         }elseif($vista=="404"){
             require_once "./app/views/content/".$vista."-view.php";
