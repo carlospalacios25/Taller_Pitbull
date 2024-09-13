@@ -49,8 +49,5 @@
 
         require_once "./app/views/inc/script.php"; 
     ?>
-    <h1>hola mario</h1>
-    <p>hola carlos</p>
-    <p>hola alejo</p>
 </body>
 </html>
