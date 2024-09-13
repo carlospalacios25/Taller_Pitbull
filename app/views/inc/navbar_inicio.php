@@ -19,7 +19,11 @@
             <a class="navbar-item" href="<?php echo APP_URL; ?>customerNew/" >
                 Registrarme 
             </a>
-
+            </div>
+            <div class="navbar-start">
+            <a class="navbar-item" href="<?php echo APP_URL; ?>informacion_taller/" >
+                Informacion Alejo 
+            </a>
             </div>
             </div>
 

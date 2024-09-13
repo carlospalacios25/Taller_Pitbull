@@ -29,7 +29,7 @@
         $viewsController= new viewsController();
         $vista=$viewsController->obtenerVistasControlador($url[0]);
 
-        if($vista=="login"||$vista=="customerNew"){
+        if($vista=="login"||$vista=="customerNew"||$vista=="informacion_taller"){
             require_once "./app/views/inc/navbar_inicio.php";
             require_once "./app/views/content/".$vista."-view.php";
         }elseif($vista=="404"){
