@@ -49,5 +49,6 @@
 
         require_once "./app/views/inc/script.php"; 
     ?>
+    <p>gusto</p>
 </body>
 </html>
