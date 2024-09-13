@@ -21,7 +21,7 @@
             </a>
             </div>
             <div class="navbar-start">
-            <a class="navbar-item" href="<?php echo APP_URL; ?>informacion_taller/" >
+            <a class="navbar-item" href="<?php echo APP_URL; ?>informationshop/" >
                 Informacion Alejo 
             </a>
             </div>

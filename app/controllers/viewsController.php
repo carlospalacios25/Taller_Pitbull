@@ -11,8 +11,8 @@
 				return "login";
 			}elseif($vista == "customerNew" ) {
 				return "customerNew";
-			}elseif($vista == "informacion_taller" ) {
-				return "informacion_taller";
+			}elseif($vista == "informationshop" ) {
+				return "informationshop";
 			}elseif ($vista != "") {
 				return $this->obtenerVistasModelo($vista);
 			}
