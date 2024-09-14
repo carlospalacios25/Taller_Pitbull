@@ -1,0 +1,114 @@
+/* Estilos generales */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Evitar scroll horizontal innecesario */
+}
+
+/* Estilo de fondo */
+.background {
+    background-image: url('https://i.pinimg.com/236x/57/12/8f/57128f7a189cad5eca4df652234aaebc.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Estilo del título */
+.title {
+    text-align: center;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto; /* Centra el título en la página */
+}
+
+/* Contenedor principal con información y mapa */
+.main-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    overflow-x: auto; /* Permitir desplazamiento horizontal */
+}
+
+/* Contenedor del contenido horizontal */
+.content-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow-x: auto; /* Habilitar desplazamiento horizontal */
+    width: calc(100% - 400px); /* Ajusta el ancho para dejar espacio para el mapa */
+    padding: 20px 0;
+}
+
+/* Estilo del contenido */
+.content {
+    text-align: left;
+    background-color: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    width: 1200px; /* Ancho fijo para extender el contenido hacia la derecha */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-right: 20px; /* Separación entre los bloques de contenido */
+}
+
+/* Contenedor del mapa */
+.map-container {
+    flex-shrink: 0;
+    width: 400px; /* Ancho fijo para el mapa */
+    height: 100vh; /* Altura del mapa igual a la altura de la vista */
+    margin-left: 20px; /* Espacio entre el contenido y el mapa */
+}
+
+/* Ajustar tamaño del texto para mejor visibilidad */
+h1 {
+    font-size: 2em; /* Título principal más pequeño */
+}
+
+h2, h3, h4 {
+    font-size: 1.5em; /* Títulos secundarios ajustados */
+}
+
+p, ul, li {
+    font-size: 1em; /* Texto general más pequeño */
+    line-height: 1.4; /* Mejorar legibilidad */
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .content {
+        width: 100%; /* Asegurar que el contenido no se salga en pantallas pequeñas */
+        max-width: none; /* Sin límite de ancho en pantallas pequeñas */
+        margin-right: 0; /* Sin margen en pantallas pequeñas */
+    }
+
+    .map-container {
+        width: 100%; /* Mapa ocupa todo el ancho en pantallas pequeñas */
+        height: 300px; /* Altura ajustada para pantallas pequeñas */
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    h2, h3, h4 {
+        font-size: 1.2em;
+    }
+
+    p, ul, li {
+        font-size: 0.9em;
+    }
+}
