@@ -2,7 +2,7 @@
     <nav class="navbar is-info" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="#">
-                <img src="../img/Logo_Inicio.png" alt="Logo" width="112" height="28">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoWM3h15Y3ZkHgY2aulJO3UfWLW0FIozsMtg&s" alt="Logo" width="112" height="28">
             </a>
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
                 <span aria-hidden="true"></span>

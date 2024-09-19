@@ -35,7 +35,7 @@
                                 <small>Para una mejor experiencia y por seguridad, te recomendamos tener instalada la última versión de este navegador:</small>
                             </p>
                             <div class="has-text-centered mt-2">
-                                <img alt="Navegador recomendado" width="50" height="50" src="../img/Navegador.png">
+                                <img alt="Navegador recomendado" width="50" height="50" src="https://st2.depositphotos.com/1102480/7545/i/950/depositphotos_75454855-stock-photo-google-chrome-logo-printed-on.jpg">
                             </div>
                         </div>
                     </div>
