@@ -2,7 +2,9 @@
         <div class="hero-body">
             <div class="container">
                 <div class="columns is-vcentered">
-                    <div class="column is-6 login-image"></div>
+                    <div class="column is-6 login-image">
+                        <img src="https://lenteregional.com/wp-content/uploads/2018/05/040518-Motocicleta-Recuperada.jpg" alt="">
+                    </div>
                     <div class="column is-6">
                         <div class="login-form">
                             <h3 class="title is-3 has-text-centered is-uppercase">Iniciar Sesión</h3>
