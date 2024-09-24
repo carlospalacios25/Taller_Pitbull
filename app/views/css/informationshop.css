@@ -9,7 +9,7 @@ body {
 
 /* Estilo de fondo */
 .background {
-    background-image: url('https://i.pinimg.com/236x/57/12/8f/57128f7a189cad5eca4df652234aaebc.jpg');
+    background-image: url('https://i.pinimg.com/564x/15/e6/f2/15e6f2566a3b04c11ce0d5c6598b48b0.jpg');
     background-size: cover;
     background-position: center;
     min-height: 100vh;
@@ -111,4 +111,48 @@ p, ul, li {
     p, ul, li {
         font-size: 0.9em;
     }
+}
+
+
+/* Estilos del pie de página */
+.footer {
+    background-color: #333;
+    padding: 20px;
+    text-align: center;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.social-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
+
+.social-icon img {
+    width: 40px; /* Tamaño inicial de los íconos */
+    height: auto;
+    transition: transform 0.3s ease; /* Transición suave para el efecto de aumento */
+}
+
+.social-icon:hover img {
+    transform: scale(1.1); /* Aumenta el tamaño de los íconos al pasar el ratón por encima */
+}
+
+.social-item p {
+    margin: 5px 0; /* Espaciado entre los textos */
+}
+
+.social-item a {
+    color: white; /* Color de texto de los enlaces */
+    text-decoration: none; /* Quitar subrayado de los enlaces */
+}
+
+.social-item a:hover {
+    text-decoration: underline; /* Subrayar el enlace al pasar el ratón por encima */
 }
