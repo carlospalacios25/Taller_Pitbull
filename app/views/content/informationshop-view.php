@@ -107,15 +107,14 @@
                     </ul>
                 </div>
             </div>
-            
-            <div class="column">
+        </div>
+        <div class="column">
                 <h3 class="title is-4">Nuestra ubicación</h3>
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3977.1758560674725!2d-74.23888152425916!3d4.562382395412169!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f75466fd8b3e1%3A0xbffacfda8eba0b0b!2sPitbull%20Bikers%20Servicio%20Tecnico!5e0!3m2!1ses!2sco!4v1726276566784!5m2!1ses!2sco" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 
                 <div class="content mt-4">
                     <p>Estamos ubicados en el corazón de Soacha, ofreciendo fácil acceso y amplio espacio para estacionamiento. Nuestra ubicación estratégica nos permite atender a clientes de toda la región de Cundinamarca.</p>
                 </div>
-            </div>
         </div>
     </div>
 </section>
