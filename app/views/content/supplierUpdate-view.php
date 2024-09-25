@@ -62,15 +62,19 @@
                 </div>
             </div>
         <div class="column">
-        <!--    <div class="select is-normal">
-                <label>Tipo Proveedor</label>
-                <select name="id_tipo_proveedor" id="id_tipo_proveedor">
-                    <?php
-                        $controlador = new supplierController();
-                        echo $controlador->obtenerOpcionesTipoProveedor();
-                    ?> 
-                </select>
-            </div>-->
+            <div class="select is-normal">
+            <label>Tipo Proveedor</label>
+            <select name="id_tipo_proveedor" id="id_tipo_proveedor">
+                <?php
+                // Obtener el id_tipo_proveedor del proveedor actual
+                $id_tipo_proveedor_actual = $datos['id_tipo_proveedor'];  // Este valor lo traes del proveedor que se está actualizando
+                
+                // Controlador para obtener las opciones
+                $controlador = new supplierController();
+                echo $controlador->obtenerOpcionesTipoProveedorActual($id_tipo_proveedor_actual);  // Pasa el id actual para seleccionar la opción correcta
+                ?> 
+            </select>
+            </div>
         </div>
         </div>
         <p class="has-text-centered">

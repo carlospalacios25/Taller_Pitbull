@@ -14,6 +14,8 @@
 <div class="container pb-6 pt-6">
     <?php
         use app\controllers\employeeController;
+use app\controllers\supplierController;
+
         include "./app/views/inc/btn_back.php";
 
         $datos=$insLogin->seleccionarDatos("Unico","empleado","documento_emp",$id);
@@ -62,15 +64,16 @@
                 </div>
             </div>
         <div class="column">
-        <!--    <div class="select is-normal">
-                <label>Tipo Proveedor</label>
-                <select name="id_tipo_proveedor" id="id_tipo_proveedor">
+            <div class="select is-normal">
+                <label>Cargo</label>
+                <select name="id_cargos" id="id_cargos">
                     <?php
-                        $controlador = new employeeController();
-                        echo $controlador->obtenerOpcionesCargo();
+                    $id_cargo_actual = $datos['id_cargos']; 
+                    $controlador = new employeeController();
+                    echo $controlador->obtenerCargoActual($id_cargo_actual);  
                     ?> 
                 </select>
-            </div>-->
+            </div>
         </div>
         </div>
         <p class="has-text-centered">

@@ -329,7 +329,7 @@
 				$alerta = [
 					"tipo" => "simple",
 					"titulo" => "Ocurrió un error inesperado",
-					"texto" => "El proveedor no coincide con el formato solicitado",
+					"texto" => "El Empleado no coincide con el formato solicitado",
 					"icono" => "error"
 				];
 				return json_encode($alerta);
@@ -380,15 +380,15 @@
 			if($this->actualizarDatos("empleado", $empleado_datos_up, $condicion)){
 				$alerta = [
 					"tipo" => "recargar",
-					"titulo" => "Tipo proveedor actualizado",
-					"texto" => "Los datos del proveedor " . $nombreEmple ." ". $apellidoEmple . " se actualizaron correctamente",
+					"titulo" => "Empleado actualizado",
+					"texto" => "Los datos del Empleado " . $nombreEmple ." ". $apellidoEmple . " se actualizaron correctamente",
 					"icono" => "success"
 				];
 			} else {
 				$alerta = [
 					"tipo" => "simple",
 					"titulo" => "Ocurrió un error inesperado",
-					"texto" => "No hemos podido actualizar los datos del proveedor " . $nombreEmple . ", por favor intente nuevamente",
+					"texto" => "No hemos podido actualizar los datos del Empleado " . $nombreEmple . ", por favor intente nuevamente",
 					"icono" => "error"
 				];
 			}
@@ -424,5 +424,21 @@
 			return $opciones;
 		}
 		
-
+		public function obtenerCargoActual($id_Cargo_actual = null) {
+			$consulta_datos = "SELECT * FROM cargos  ORDER BY id_cargos ASC";
+		
+			$stmt = $this->ejecutarConsulta($consulta_datos);
+			$stmt->execute();
+			$datos = $stmt->fetchAll();
+		
+			$opciones = '';
+		
+			foreach ($datos as $row) {
+				$selected = ($row['id_cargos'] == $id_Cargo_actual) ? 'selected' : '';
+		
+				$opciones .= '<option value="' . htmlspecialchars($row['id_cargos']) . '" ' . $selected . '>' . htmlspecialchars($row['tipo_cargo']) . '</option>';
+			}
+		
+			return $opciones;
+		}
 	}

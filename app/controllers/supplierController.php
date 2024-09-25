@@ -307,7 +307,7 @@
 			$apellidoProve = $this->limpiarCadena($_POST['apellido_sociedad']);
 			$direccionProve = $this->limpiarCadena($_POST['direccion']);
 			$telefonoProve = $this->limpiarCadena($_POST['telefono']);
-			/*$tipoProve = isset($_POST['id_tipo_proveedor']) ? $this->limpiarCadena($_POST['id_tipo_proveedor']) : NULL;*/
+			$tipoProve = isset($_POST['id_tipo_proveedor']) ? $this->limpiarCadena($_POST['id_tipo_proveedor']) : NULL;
 
 		    # Verificando campos obligatorios #
 		    if($documentoProve=="" || $nombreProve==""|| $apellidoProve==""|| $direccionProve==""|| $telefonoProve==""){
@@ -363,11 +363,11 @@
 					"campo_marcador" => ":Telefono",
 					"campo_valor" => $telefonoProve
 				],
-				/*[
+				[
 					"campo_nombre" => "id_tipo_proveedor",
 					"campo_marcador" => ":Tipo",
 					"campo_valor" => $tipoProve
-				],*/
+				],
 
 			];
 
@@ -424,5 +424,24 @@
 			return $opciones;
 		}
 		
+		public function obtenerOpcionesTipoProveedorActual($id_tipo_proveedor_actual = null) {
+			$consulta_datos = "SELECT * FROM tipo_proveedor ORDER BY id_tipo_proveedor ASC";
+		
+			$stmt = $this->ejecutarConsulta($consulta_datos);
+			$stmt->execute();
+			$datos = $stmt->fetchAll();
+		
+			$opciones = '';
+		
+			foreach ($datos as $row) {
+				// Verificar si el id_tipo_proveedor actual es el mismo que el de la opción
+				$selected = ($row['id_tipo_proveedor'] == $id_tipo_proveedor_actual) ? 'selected' : '';
+		
+				// Generar cada opción con el valor seleccionado si corresponde
+				$opciones .= '<option value="' . htmlspecialchars($row['id_tipo_proveedor']) . '" ' . $selected . '>' . htmlspecialchars($row['tipo_proveedor']) . '</option>';
+			}
+		
+			return $opciones;
+		}
 
 	}
