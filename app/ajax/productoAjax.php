@@ -14,9 +14,9 @@
 			echo $producto->registrarProductoControlador();
 		}
 
-		/*if($_POST['Modulo_Empleado']=="actualizar"){
-			echo $porveedor->actualizarEmpleadoControlador();
-		}*/
+		if($_POST['Modulo_Producto']=="actualizar"){
+			echo $producto->actualizarProductoControlador();
+		}
 		
 	}else{
 		session_destroy();

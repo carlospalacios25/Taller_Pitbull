@@ -3,7 +3,7 @@
             <div class="container">
                 <div class="columns is-vcentered">
                     <div class="column is-6 login-image">
-                        <img src="https://lenteregional.com/wp-content/uploads/2018/05/040518-Motocicleta-Recuperada.jpg" alt="">
+                        <img src="https://m.media-amazon.com/images/I/61q5JpTYbOL.jpg" width="500">
                     </div>
                     <div class="column is-6">
                         <div class="login-form">

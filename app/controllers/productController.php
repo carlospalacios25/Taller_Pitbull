@@ -211,17 +211,17 @@
 			return $tabla;
 		}
 		/*----------  Controlador actualizar   ----------*/
-		public function actualizarEmpleadoControlador(){
+		public function actualizarProductoControlador(){
 
-			$documentoEmple=$this->limpiarCadena($_POST['documento_emp']);
+			$idProducto =$this->limpiarCadena($_POST['id_producto']);
 
 			# Verificando usuario #
-		    $datos=$this->ejecutarConsulta("SELECT * FROM empleado WHERE documento_emp ='$documentoEmple'");
+		    $datos=$this->ejecutarConsulta("SELECT * FROM producto WHERE id_producto  ='$idProducto'");
 		    if($datos->rowCount()<=0){
 		        $alerta=[
 					"tipo"=>"simple",
 					"titulo"=>"Ocurrió un error inesperado",
-					"texto"=>"No hemos encontrado el proveedor en el sistema",
+					"texto"=>"No hemos encontrado el producto en el sistema",
 					"icono"=>"error"
 				];
 				return json_encode($alerta);
@@ -297,14 +297,14 @@
 
 
 			# Almacenando datos#
-			$nombreEmple = $this->limpiarCadena($_POST['nom_empleado']);
-			$apellidoEmple = $this->limpiarCadena($_POST['ape_empleado']);
-			$direccionEmple = $this->limpiarCadena($_POST['direccion']);
-			$telefonoEmple = $this->limpiarCadena($_POST['telefono']);
-			/*$tipoProve = isset($_POST['id_tipo_proveedor']) ? $this->limpiarCadena($_POST['id_tipo_proveedor']) : NULL;*/
+			$nomProdu = $this->limpiarCadena($_POST['nom_producto']);
+			$codigoProd = $this->limpiarCadena($_POST['codigo']);
+			$descripcionProd = $this->limpiarCadena($_POST['descripcion']);
+			$pUnitarioProd = $this->limpiarCadena($_POST['precio_unitario']);
+			$existenciasProd = $this->limpiarCadena($_POST['existencias']);
 
 		    # Verificando campos obligatorios #
-		    if($documentoEmple=="" || $nombreEmple==""|| $apellidoEmple==""|| $direccionEmple==""|| $telefonoEmple==""){
+		    if($nomProdu=="" || $codigoProd==""|| $descripcionProd==""|| $pUnitarioProd==""|| $existenciasProd =="" ){
 		        $alerta=[
 					"tipo"=>"simple",
 					"titulo"=>"Ocurrió un error inesperado",
@@ -315,108 +315,79 @@
 		        exit();
 		    }
 
-		    # Verificando integridad de los datos $this->verificarDatos("[0-9]{0,40}", $tipoProve) || #
-			if ($this->verificarDatos("[0-9]{3,40}", $documentoEmple) || 
-				$this->verificarDatos("[0-9]{3,40}", $telefonoEmple) || 
-				$this->verificarDatos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,40}", $nombreEmple) || 
-				$this->verificarDatos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,40}", $apellidoEmple)) {
-				$alerta = [
-					"tipo" => "simple",
-					"titulo" => "Ocurrió un error inesperado",
-					"texto" => "El proveedor no coincide con el formato solicitado",
-					"icono" => "error"
-				];
-				return json_encode($alerta);
-				exit();
+
+			if ($this->verificarDatos("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{3,45}", $nomProdu) || 
+			$this->verificarDatos("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{3,45}", $codigoProd) || 
+			$this->verificarDatos("[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9 ]{3,45}", $descripcionProd) || 
+			$this->verificarDatos("[0-9]{0,40}", $pUnitarioProd) || 
+			$this->verificarDatos("[0-9]{0,40}", $existenciasProd)) {
+			$alerta = [
+				"tipo" => "simple",
+				"titulo" => "Ocurrió un error inesperado",
+				"texto" => "El Producto no coincide con el formato solicitado",
+				"icono" => "error"
+			];
+			return json_encode($alerta);
 			}
 
-
-            $empleado_datos_up=[
+            $producto_datos_up=[
 				/*[
 					"campo_nombre" => "documento_NIT",
 					"campo_marcador" => ":Documento",
 					"campo_valor" => $documentoProve
 				],*/
 				[
-					"campo_nombre" => "nom_empleado",
-					"campo_marcador" => ":Nombre",
-					"campo_valor" => $nombreEmple
+					"campo_nombre" => "nom_producto",
+					"campo_marcador" => ":NombrePro",
+					"campo_valor" => $nomProdu
 				],
 				[
-					"campo_nombre" => "ape_empleado",
-					"campo_marcador" => ":Apellido",
-					"campo_valor" => $apellidoEmple
+					"campo_nombre" => "codigo",
+					"campo_marcador" => ":Codigo",
+					"campo_valor" => $codigoProd
 				],
 				[
-					"campo_nombre" => "direccion",
-					"campo_marcador" => ":Direccion",
-					"campo_valor" => $direccionEmple
+					"campo_nombre" => "descripcion",
+					"campo_marcador" => ":Descripcion",
+					"campo_valor" => $descripcionProd
 				],
 				[
-					"campo_nombre" => "telefono",
-					"campo_marcador" => ":Telefono",
-					"campo_valor" => $telefonoEmple
+					"campo_nombre" => "precio_unitario",
+					"campo_marcador" => ":PrecioU",
+					"campo_valor" => $pUnitarioProd
 				],
-				/*[
-					"campo_nombre" => "id_tipo_proveedor",
-					"campo_marcador" => ":Tipo",
-					"campo_valor" => $tipoProve
-				],*/
+				[
+					"campo_nombre" => "existencias",
+					"campo_marcador" => ":Existencias",
+					"campo_valor" => $existenciasProd
+				],
 
 			];
 
 			$condicion=[
-				"condicion_campo"=>"documento_emp",
-				"condicion_marcador"=>":Documento",
-				"condicion_valor"=>$documentoEmple
+				"condicion_campo"=>"id_producto ",
+				"condicion_marcador"=>":Id",
+				"condicion_valor"=>$idProducto
 			];
 
-			if($this->actualizarDatos("empleado", $empleado_datos_up, $condicion)){
+			if($this->actualizarDatos("producto", $producto_datos_up, $condicion)){
 				$alerta = [
 					"tipo" => "recargar",
-					"titulo" => "Tipo proveedor actualizado",
-					"texto" => "Los datos del proveedor " . $nombreEmple ." ". $apellidoEmple . " se actualizaron correctamente",
+					"titulo" => "Producto Actualizado",
+					"texto" => "Los datos del producto " . $nomProdu ." se actualizaron correctamente",
 					"icono" => "success"
 				];
 			} else {
 				$alerta = [
 					"tipo" => "simple",
 					"titulo" => "Ocurrió un error inesperado",
-					"texto" => "No hemos podido actualizar los datos del proveedor " . $nombreEmple . ", por favor intente nuevamente",
+					"texto" => "No hemos podido actualizar los datos del producto " . $nomProdu . ", por favor intente nuevamente",
 					"icono" => "error"
 				];
 			}
 
 			return json_encode($alerta);
 		}
-
-		public function obtenerOpcionesCargo($busqueda = "") {
-			$busqueda = $this->limpiarCadena($busqueda);
-			
-			if ($busqueda != "") {
-				$consulta_datos = "SELECT * FROM cargos WHERE (id_cargos LIKE :busqueda OR tipo_cargo LIKE :busqueda) ORDER BY id_cargos ASC";
-			} else {
-				$consulta_datos = "SELECT * FROM cargos ORDER BY id_cargos ASC";
-			}
-			
-			$stmt = $this->ejecutarConsulta($consulta_datos);
-		
-			if ($busqueda != "") {
-				$stmt->bindValue(':busqueda', '%' . $busqueda . '%');
-			}
-			
-			$stmt->execute();
-		
-			$datos = $stmt->fetchAll();
-		
-			$opciones = '';
-			foreach ($datos as $row) {
-				$opciones .= '<option value="' . htmlspecialchars($row['id_cargos']) . '">' . htmlspecialchars($row['tipo_cargo']) . '</option>';
-			}
-		
-			// Devolver las opciones generadas
-			return $opciones;
-		}
-		
+	
 
 	}
