@@ -80,7 +80,7 @@
                 <div class="navbar-dropdown is-boxed">
                     <a class="navbar-item" href="<?php echo APP_URL; ?>productNew/">
                         Nuevo Producto
-                    </a>            
+                    </a>      
                 </div>
             </div>
         </div>
