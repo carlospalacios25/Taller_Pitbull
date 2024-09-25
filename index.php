@@ -20,6 +20,7 @@
     <?php require_once "./app/views/inc/head.php"; ?>
 </head>
 <body>
+    
     <?php
         use app\controllers\viewsController;
         use app\controllers\loginController;
@@ -29,10 +30,7 @@
         $viewsController= new viewsController();
         $vista=$viewsController->obtenerVistasControlador($url[0]);
 
-        if($vista=="login"||$vista=="customerNew"){
-            require_once "./app/views/inc/navbar_inicio.php";
-            require_once "./app/views/content/".$vista."-view.php";
-        }elseif($vista=="informationshop"){
+        if($vista=="login"||$vista=="customerNew" || $vista=="informationshop" || $vista == "serviceNew"){
             require_once "./app/views/inc/navbar_inicio.php";
             require_once "./app/views/content/".$vista."-view.php";
         }elseif($vista=="404"){

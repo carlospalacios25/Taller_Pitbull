@@ -47,8 +47,8 @@
         </div>
     </div>
     <p class="has-text-centered">
-        <button type="reset" class="button is-link is-light is-rounded">Limpiar</button>
-        <button type="submit" class="button is-info is-rounded">Guardar</button>
+        <button type="reset" class="button is-danger is-outlined">Limpiar</button>
+        <button type="submit" class="button is-primary is-outlined">Guardar</button>
     </p>
 </form>
 

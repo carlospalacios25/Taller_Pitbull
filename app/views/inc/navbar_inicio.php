@@ -13,6 +13,7 @@
         <div class="navbar-menu">
             <div class="navbar-end">
                 <a class="navbar-item" href="<?php echo APP_URL; ?>customerNew/" >Registro</a>
+                <a class="navbar-item" href="<?php echo APP_URL; ?>serviceNew/" >Solicitar Servicio</a>
                 <a class="navbar-item" href="<?php echo APP_URL; ?>informationshop/" >Acerca de</a>
                 <a class="navbar-item" href="<?php echo APP_URL; ?>login/" >Login</a>
             </div>

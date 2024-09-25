@@ -13,6 +13,8 @@
 				return "customerNew";
 			}elseif($vista == "informationshop" ) {
 				return "informationshop";
+			}elseif($vista == "serviceNew" ) {
+				return "serviceNew";
 			}elseif ($vista != "") {
 				return $this->obtenerVistasModelo($vista);
 			}
