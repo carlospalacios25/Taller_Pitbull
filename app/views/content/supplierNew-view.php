@@ -47,6 +47,7 @@
             <div class="select is-normal">
                 <label>Tipo Proveedor</label>
                 <select name="id_tipo_proveedor" id="id_tipo_proveedor">
+                <option selected disabled value="">Selecione Tipo Proveedor</option>
 					<?php
 						use app\controllers\supplierController; 
 						$controlador = new supplierController();

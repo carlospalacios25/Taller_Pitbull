@@ -47,6 +47,7 @@
             <div class="select is-normal">
                 <label>Cargo</label>
                 <select name="id_cargos" id="id_cargos">
+                <option selected disabled value="">Selecione Un Cargo</option>
 					<?php
 						use app\controllers\employeeController; 
 						$controlador = new employeeController();
