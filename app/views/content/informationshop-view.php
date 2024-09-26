@@ -158,6 +158,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const heroContent = document.querySelector('.hero-content');
+        const fadeElements = document.querySelectorAll('.fade-in');
         
         function checkScroll() {
             let scrollPosition = window.pageYOffset;
@@ -165,9 +166,19 @@
             if (scrollPosition > 50) {
                 heroContent.classList.add('visible');
             }
+
+            fadeElements.forEach(element => {
+                let elementPosition = element.getBoundingClientRect().top;
+                let screenHeight = window.innerHeight;
+                
+                if(elementPosition < screenHeight - 100) {
+                    element.classList.add('visible');
+                }
+            });
         }
 
         window.addEventListener('scroll', checkScroll);
+        checkScroll(); // Check on load
     });
 </script>
 </body>
