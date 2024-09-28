@@ -12,7 +12,7 @@
         private $user = DB_USER;
         private $pass = DB_PASS;
 
-        public function conectar(){
+		public function conectar(){
             $conexion = new PDO("mysql:host=".$this->server.";dbname=".$this->db,$this->user,$this->pass);
 			$conexion->exec("SET CHARACTER SET utf8");
 			return $conexion;

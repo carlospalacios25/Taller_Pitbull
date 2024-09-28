@@ -14,9 +14,9 @@
 			echo $servicio->registrarServicioControlador();
 		}
 
-		/*if($_POST['Modulo_Cliente']=="actualizar"){
-			echo $porveedor->actualizarProveedorControlador();
-		}*/
+		if($_POST['Modulo_Servicio']=="actualizarEmple"){
+			echo $servicio->actualizarServicioEmpleControlador();
+		}
 		
 	}else{
 		session_destroy();

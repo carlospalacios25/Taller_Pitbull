@@ -6,6 +6,7 @@
 
 	class serviceController extends mainModel{
 
+
 		/*----------  Controlador registrar  ----------*/
 		public function registrarServicioControlador(){
     		// Almacenando datos
@@ -26,6 +27,7 @@
 
 			// Verificando formato de datos
 			if ($this->verificarDatos("[0-9]{3,40}", $cedulaCli)) {
+				
 				$alerta = [
 					"tipo" => "simple",
 					"titulo" => "Ocurrió un error inesperado",
@@ -63,12 +65,15 @@
 
 			try {
 				$registrar_servicio = $this->guardarDatos("servicios", $servicio_reg);
-
+				
 				if ($registrar_servicio->rowCount() == 1) {
+					$consulta_id = $this->ejecutarConsulta("SELECT id_servicios FROM servicios ORDER BY id_servicios DESC LIMIT 1");
+        			$idServicio = $consulta_id->fetchColumn();
+
 					$alerta = [
 						"tipo" => "limpiar",
 						"titulo" => "Servicio registrado",
-						"texto" => "Numero de servicio creado ",
+						"texto" => "Tu número de servicio es: " . $idServicio,
 						"icono" => "success"
 					];
 				} else {
@@ -91,7 +96,7 @@
 			return json_encode($alerta);
 		}
 		/*----------  Controlador listar   ----------*/
-		public function listarClienteControlador($pagina, $registros, $url, $busqueda) {
+		public function listadoServiciosPorAsignarControlador($pagina, $registros, $url, $busqueda) {
 
 			$pagina = $this->limpiarCadena($pagina);
 			$registros = $this->limpiarCadena($registros);
@@ -106,11 +111,17 @@
 			$inicio = ($pagina > 0) ? (($pagina * $registros) - $registros) : 0;
 		
 			if (isset($busqueda) && $busqueda != "") {
-				$consulta_datos = "SELECT * FROM cliente WHERE (cedula LIKE '%$busqueda%' OR nom_proveedor LIKE '%$busqueda%') ORDER BY cedula ASC LIMIT $inicio, $registros";
-				$consulta_total = "SELECT COUNT(cedula) FROM cliente WHERE (cedula LIKE '%$busqueda%' OR cedula LIKE '%$busqueda%')";
+				$consulta_datos = "SELECT * FROM servicios WHERE (cedula_cliente LIKE '%$busqueda%' OR documento_emp LIKE '%$busqueda%') ORDER BY id_servicios  ASC LIMIT $inicio, $registros";
+				$consulta_total = "SELECT COUNT(cedula) FROM servicios WHERE (cedula_cliente LIKE '%$busqueda%' OR documento_emp LIKE '%$busqueda%')";
 			} else {
-				$consulta_datos = "SELECT * FROM cliente ORDER BY cedula ASC LIMIT $inicio, $registros";
-				$consulta_total = "SELECT COUNT(cedula) FROM cliente";
+				$consulta_datos="SELECT servicios.id_servicios, servicios.observaciones, cliente.nom_cliente, cliente.ape_cliente 
+							FROM servicios
+							INNER JOIN cliente ON servicios.cedula_cliente = cliente.cedula 
+							WHERE servicios.documento_emp IS NULL 
+							LIMIT $inicio, $registros;
+							";
+				$consulta_total = "SELECT COUNT(id_servicios) FROM servicios  WHERE documento_emp IS NULL";
+
 			}
 		
 			$datos = $this->ejecutarConsulta($consulta_datos);
@@ -127,11 +138,10 @@
 					<thead>
 						<tr>
 							<th class="has-text-centered">#</th>
-							<th class="has-text-centered">cedula</th>
-							<th class="has-text-centered">Nombre Completo</th>
-							<th class="has-text-centered">Direccion</th>
-							<th class="has-text-centered">Telefono</th>
-							<!--<th class="has-text-centered" colspan="3">Opciones</th>-->
+							<th class="has-text-centered">Servicio</th>
+							<th class="has-text-centered">Mantenimiento</th>
+							<th class="has-text-centered">Cliente</th>
+							<th class="has-text-centered" colspan="3">Opciones</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -144,13 +154,12 @@
 					$tabla .= '
 						<tr class="has-text-centered">
 							<td>' . $contador . '</td>
-							<td>' . $rows['cedula'] . '</td>
-							<td>' . $rows['nom_cliente'] . ' '.$rows['ape_cliente'].'</td>
-							<td>' . $rows['direccion'] . '</td>
-							<td>' . $rows['telefono'] . '</td>
-							<!--<td>
-								<a href="' . APP_URL . 'customerUpdate/' . $rows['cedula'] . '/" class="button is-success is-rounded is-small">Actualizar</a>
-							</td>-->
+							<td>' . $rows['id_servicios'] . '</td>
+							<td>' . $rows['observaciones'] .'</td>
+							<td>' . $rows['nom_cliente'] .' '. $rows['ape_cliente'].' </td>
+							<td>
+								<a href="' . APP_URL . 'serviceUpdateEmpl/' . $rows['id_servicios'] . '/" class="button is-success is-rounded is-small">Asignar</a>
+							</td>
 						</tr>
 					';
 					$contador++;
@@ -182,7 +191,7 @@
 		
 			### Paginacion ###
 			if ($total >= 1 && $pagina <= $numeroPaginas) {
-				$tabla .= '<p class="has-text-right">Mostrando Cliente <strong>' . $pag_inicio . '</strong> al <strong>' . $pag_final . '</strong> de un <strong>total de ' . $total . '</strong></p>';
+				$tabla .= '<p class="has-text-right">Servicios Pendiente Por Asignar <strong>' . $pag_inicio . '</strong> al <strong>' . $pag_final . '</strong> de un <strong>total de ' . $total . '</strong></p>';
 		
 				$tabla .= $this->paginadorTablas($pagina, $numeroPaginas, $url, 10);
 			}
@@ -191,183 +200,105 @@
 		}
 
 		/*----------  Controlador actualizar   ----------*/
-		public function actualizarProveedorControlador(){
+		public function actualizarServicioEmpleControlador(){
 
-			$documentoProve=$this->limpiarCadena($_POST['documento_NIT']);
-
+			$idservicio = $this->limpiarCadena($_POST['id_servicios']);
+			
 			# Verificando usuario #
-		    $datos=$this->ejecutarConsulta("SELECT * FROM proveedor WHERE documento_NIT ='$documentoProve'");
-		    if($datos->rowCount()<=0){
-		        $alerta=[
-					"tipo"=>"simple",
-					"titulo"=>"Ocurrió un error inesperado",
-					"texto"=>"No hemos encontrado el proveedor en el sistema",
-					"icono"=>"error"
-				];
-				return json_encode($alerta);
-		        exit();
-		    }else{
-		    	$datos=$datos->fetch();
-		    }
+			$datos = $this->ejecutarConsulta("SELECT * FROM servicios WHERE id_servicios = '$idservicio' AND documento_emp IS NULL LIMIT 2;");
 
-		    $admin_usuario=$this->limpiarCadena($_POST['administrador_usuario']);
-		    $admin_clave=$this->limpiarCadena($_POST['administrador_clave']);
-
-		    # Verificando campos obligatorios admin #
-		    if($admin_usuario=="" || $admin_clave==""){
-		        $alerta=[
-					"tipo"=>"simple",
-					"titulo"=>"Ocurrió un error inesperado",
-					"texto"=>"No ha llenado todos los campos que son obligatorios, que corresponden a su USUARIO y CLAVE",
-					"icono"=>"error"
-				];
-				return json_encode($alerta);
-		        exit();
-		    }
-
-		    if($this->verificarDatos("[a-zA-Z0-9]{4,20}",$admin_usuario)){
-		        $alerta=[
-					"tipo"=>"simple",
-					"titulo"=>"Ocurrió un error inesperado",
-					"texto"=>"Su USUARIO no coincide con el formato solicitado",
-					"icono"=>"error"
-				];
-				return json_encode($alerta);
-		        exit();
-		    }
-
-		    if($this->verificarDatos("[a-zA-Z0-9$@.-]{7,100}",$admin_clave)){
-		    	$alerta=[
-					"tipo"=>"simple",
-					"titulo"=>"Ocurrió un error inesperado",
-					"texto"=>"Su CLAVE no coincide con el formato solicitado",
-					"icono"=>"error"
-				];
-				return json_encode($alerta);
-		        exit();
-		    }
-
-		    # Verificando administrador #
-		    $check_admin=$this->ejecutarConsulta("SELECT * FROM usuario WHERE usuario_usuario='$admin_usuario' AND usuario_id='".$_SESSION['id']."'");
-		    if($check_admin->rowCount()==1){
-
-		    	$check_admin=$check_admin->fetch();
-
-		    	if($check_admin['usuario_usuario']!=$admin_usuario || !password_verify($admin_clave,$check_admin['usuario_clave'])){
-
-		    		$alerta=[
-						"tipo"=>"simple",
-						"titulo"=>"Ocurrió un error inesperado",
-						"texto"=>"USUARIO o CLAVE de administrador incorrectos",
-						"icono"=>"error"
-					];
-					return json_encode($alerta);
-		        	exit();
-		    	}
-		    }else{
-		        $alerta=[
-					"tipo"=>"simple",
-					"titulo"=>"Ocurrió un error inesperado",
-					"texto"=>"USUARIO o CLAVE de administrador incorrectos",
-					"icono"=>"error"
-				];
-				return json_encode($alerta);
-		        exit();
-		    }
-
-
-			# Almacenando datos#
-			$nombreProve = $this->limpiarCadena($_POST['nom_proveedor']);
-			$apellidoProve = $this->limpiarCadena($_POST['apellido_sociedad']);
-			$direccionProve = $this->limpiarCadena($_POST['direccion']);
-			$telefonoProve = $this->limpiarCadena($_POST['telefono']);
-			/*$tipoProve = isset($_POST['id_tipo_proveedor']) ? $this->limpiarCadena($_POST['id_tipo_proveedor']) : NULL;*/
-
-		    # Verificando campos obligatorios #
-		    if($documentoProve=="" || $nombreProve==""|| $apellidoProve==""|| $direccionProve==""|| $telefonoProve==""){
-		        $alerta=[
-					"tipo"=>"simple",
-					"titulo"=>"Ocurrió un error inesperado",
-					"texto"=>"No has llenado todos los campos que son obligatorios",
-					"icono"=>"error"
-				];
-				return json_encode($alerta);
-		        exit();
-		    }
-
-		    # Verificando integridad de los datos $this->verificarDatos("[0-9]{0,40}", $tipoProve) || #
-			if ($this->verificarDatos("[0-9]{3,40}", $documentoProve) || 
-				$this->verificarDatos("[0-9]{3,40}", $telefonoProve) || 
-				$this->verificarDatos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,40}", $nombreProve) || 
-				$this->verificarDatos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,40}", $apellidoProve)) {
+			
+			if ($datos->rowCount() <= 0) {
 				$alerta = [
 					"tipo" => "simple",
 					"titulo" => "Ocurrió un error inesperado",
-					"texto" => "El proveedor no coincide con el formato solicitado",
+					"texto" => "No hemos encontrado el Servicio en el sistema y/o ya asignado",
 					"icono" => "error"
 				];
 				return json_encode($alerta);
-				exit();
+			} else {
+				$datos = $datos->fetch();
 			}
-
-
-            $proveedor_datos_up=[
-				/*[
-					"campo_nombre" => "documento_NIT",
-					"campo_marcador" => ":Documento",
-					"campo_valor" => $documentoProve
-				],*/
+		
+			# Almacenando datos #
+			$observacionServ = $this->limpiarCadena($_POST['observaciones']);
+			$documentoEmple = isset($_POST['documento_emp']) ? $this->limpiarCadena($_POST['documento_emp']) : NULL;
+		
+			# Verificando campos obligatorios #
+			if ($observacionServ == "") {
+				$alerta = [
+					"tipo" => "simple",
+					"titulo" => "Ocurrió un error inesperado",
+					"texto" => "No has llenado todos los campos que son obligatorios",
+					"icono" => "error"
+				];
+				return json_encode($alerta);
+			}
+	
+		
+			$servicios_datos_up = [
 				[
-					"campo_nombre" => "nom_proveedor",
-					"campo_marcador" => ":Nombre",
-					"campo_valor" => $nombreProve
+					"campo_nombre" => "observaciones",
+					"campo_marcador" => ":Observaciones",
+					"campo_valor" => $observacionServ
 				],
 				[
-					"campo_nombre" => "apellido_sociedad",
-					"campo_marcador" => ":Apellido",
-					"campo_valor" => $apellidoProve
+					"campo_nombre" => "documento_emp",
+					"campo_marcador" => ":Empleado",
+					"campo_valor" => $documentoEmple
 				],
-				[
-					"campo_nombre" => "direccion",
-					"campo_marcador" => ":Direccion",
-					"campo_valor" => $direccionProve
-				],
-				[
-					"campo_nombre" => "telefono",
-					"campo_marcador" => ":Telefono",
-					"campo_valor" => $telefonoProve
-				],
-				/*[
-					"campo_nombre" => "id_tipo_proveedor",
-					"campo_marcador" => ":Tipo",
-					"campo_valor" => $tipoProve
-				],*/
-
 			];
-
-			$condicion=[
-				"condicion_campo"=>"documento_NIT",
-				"condicion_marcador"=>":Documento",
-				"condicion_valor"=>$documentoProve
+		
+			$condicion = [
+				"condicion_campo" => "id_servicios",
+				"condicion_marcador" => ":IdServicios",
+				"condicion_valor" => $idservicio
 			];
-
-			if($this->actualizarDatos("proveedor", $proveedor_datos_up, $condicion)){
+		
+			if ($this->actualizarDatos("servicios", $servicios_datos_up, $condicion)) {
 				$alerta = [
 					"tipo" => "recargar",
 					"titulo" => "Tipo proveedor actualizado",
-					"texto" => "Los datos del proveedor " . $nombreProve . " se actualizaron correctamente",
+					"texto" => "Servicio asignado a " . $documentoEmple,
 					"icono" => "success"
 				];
 			} else {
 				$alerta = [
 					"tipo" => "simple",
 					"titulo" => "Ocurrió un error inesperado",
-					"texto" => "No hemos podido actualizar los datos del proveedor " . $nombreProve . ", por favor intente nuevamente",
+					"texto" => "No hemos podido actualizar los datos del servicio " . $documentoEmple . ", por favor intente nuevamente",
 					"icono" => "error"
 				];
 			}
-
+		
 			return json_encode($alerta);
-		}			
+		}		
 
+		public function obtenerOpcionesEmpleado($busqueda = "") {
+			$busqueda = $this->limpiarCadena($busqueda);
+			
+			if ($busqueda != "") {
+				$consulta_datos = "SELECT * FROM cargos WHERE (id_cargos LIKE :busqueda OR tipo_cargo LIKE :busqueda) ORDER BY id_cargos ASC";
+			} else {
+				$consulta_datos = "SELECT * FROM empleado ORDER BY documento_emp  ASC";
+			}
+			
+			$stmt = $this->ejecutarConsulta($consulta_datos);
+		
+			if ($busqueda != "") {
+				$stmt->bindValue(':busqueda', '%' . $busqueda . '%');
+			}
+			
+			$stmt->execute();
+		
+			$datos = $stmt->fetchAll();
+		
+			$opciones = '';
+			foreach ($datos as $row) {
+				$opciones .= '<option value="' . htmlspecialchars($row['documento_emp']) . '">' . htmlspecialchars($row['nom_empleado']) . ' ' . htmlspecialchars($row['ape_empleado']) . '</option>';
+			}
+		
+			// Devolver las opciones generadas
+			return $opciones;
+		}
 	}

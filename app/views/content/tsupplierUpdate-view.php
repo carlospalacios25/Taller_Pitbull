@@ -3,13 +3,11 @@
 
 		$id=$insLogin->limpiarCadena($url[1]);
 
-		if($id==$_SESSION['id']){ 
+		if($id == $_SESSION['id']){ 
 	?>
-	<h1 class="title">Mi cuenta</h1>
-	<h2 class="subtitle">Actualizar cuenta</h2>
+		<h1 class="title">Actualizar Tipo Proveedor</h1>
 	<?php }else{ ?>
-	<h1 class="title">Usuarios</h1>
-	<h2 class="subtitle">Actualizar usuario</h2>
+		<h1 class="title">Actualizar Tipo Proveedor</h1>
 	<?php } ?>
 </div>
 <div class="container pb-6 pt-6">
@@ -31,7 +29,7 @@
 		  	<div class="column">
 		    	<div class="control">
 					<label>Tipo Proveedor</label>
-				  	<input class="input" type="text" name="tipo_proveedor" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,40}" maxlength="50" value="<?php echo $datos['tproveedor']; ?>" required >
+				  	<input class="input" type="text" name="tipo_proveedor" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,40}" maxlength="50" value="<?php echo $datos['tipo_proveedor']; ?>" required >
 				</div>
 		  	</div>
 		  	<div class="column">
