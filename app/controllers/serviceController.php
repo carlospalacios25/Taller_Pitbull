@@ -301,6 +301,7 @@
 			// Devolver las opciones generadas
 			return $opciones;
 		}
+
 		public function listadoServiciosPendienteCerrarControlador($pagina, $registros, $url, $busqueda) {
 
 			$pagina = $this->limpiarCadena($pagina);
@@ -319,13 +320,13 @@
 				$consulta_datos = "SELECT * FROM servicios WHERE (cedula_cliente LIKE '%$busqueda%' OR documento_emp LIKE '%$busqueda%') ORDER BY id_servicios  ASC LIMIT $inicio, $registros";
 				$consulta_total = "SELECT COUNT(empleado) FROM servicios WHERE (documento_emp LIKE '%$busqueda%' OR documento_emp LIKE '%$busqueda%')";
 			} else {
-				$consulta_datos="SELECT servicios.id_servicios, servicios.observaciones, empleado.nom_empleado, empleado.ape_empleado 
+				$consulta_datos="SELECT servicios.id_servicios,servicios.observaciones, servicios.mantenimiento, empleado.nom_empleado, empleado.ape_empleado 
 							FROM servicios
 							INNER JOIN empleado ON servicios.documento_emp = empleado.documento_emp 
-							WHERE servicios.documento_emp IS NOT NULL 
+							WHERE servicios.mantenimiento = ''
 							LIMIT $inicio, $registros;
 							";
-				$consulta_total = "SELECT COUNT(id_servicios) FROM servicios  WHERE documento_emp IS NULL";
+				$consulta_total = "SELECT COUNT(id_servicios) FROM servicios  WHERE mantenimiento  = '' And documento_emp is not null";
 
 			}
 		
