@@ -364,7 +364,7 @@
 							<td>' . $rows['observaciones'] .'</td>
 							<td>' . $rows['nom_empleado'] .' '. $rows['ape_empleado'].' </td>
 							<td>
-								<a href="' . APP_URL . 'serviceUpdateEmpl/' . $rows['id_servicios'] . '/" class="button is-success is-rounded is-small">Asignar</a>
+								<a href="' . APP_URL . 'serviceUpdateClose/' . $rows['id_servicios'] . '/" class="button is-success is-rounded is-small">Cerrar</a>
 							</td>
 						</tr>
 					';
@@ -404,4 +404,78 @@
 		
 			return $tabla;
 		}
+
+		public function cerrarServiciosControlador(){
+
+			$idservicio = $this->limpiarCadena($_POST['id_servicios']);
+			
+			# Verificando usuario #
+			$datos = $this->ejecutarConsulta("SELECT * FROM servicios WHERE id_servicios = '$idservicio' and mantenimiento  = '' And documento_emp is not null LIMIT 2;");
+
+			
+			if ($datos->rowCount() <= 0) {
+				$alerta = [
+					"tipo" => "simple",
+					"titulo" => "Ocurrió un error inesperado",
+					"texto" => "No hemos encontrado el Servicio en el sistema y/o ya asignado",
+					"icono" => "error"
+				];
+				return json_encode($alerta);
+			} else {
+				$datos = $datos->fetch();
+			}
+		
+			# Almacenando datos #
+			$observacionServ = $this->limpiarCadena($_POST['observaciones']);
+			$mateneEmple = $this->limpiarCadena($_POST['mantenimiento']);
+		
+			# Verificando campos obligatorios #
+			if ($observacionServ == "" || $mateneEmple == "" ) {
+				$alerta = [
+					"tipo" => "simple",
+					"titulo" => "Ocurrió un error inesperado",
+					"texto" => "No has llenado todos los campos que son obligatorios",
+					"icono" => "error"
+				];
+				return json_encode($alerta);
+			}
+	
+		
+			$servicios_datos_up = [
+				[
+					"campo_nombre" => "observaciones",
+					"campo_marcador" => ":Observaciones",
+					"campo_valor" => $observacionServ
+				],
+				[
+					"campo_nombre" => "mantenimiento",
+					"campo_marcador" => ":Mantenimiento",
+					"campo_valor" => $mateneEmple
+				],
+			];
+		
+			$condicion = [
+				"condicion_campo" => "id_servicios",
+				"condicion_marcador" => ":IdServicios",
+				"condicion_valor" => $idservicio
+			];
+		
+			if ($this->actualizarDatos("servicios", $servicios_datos_up, $condicion)) {
+				$alerta = [
+					"tipo" => "recargar",
+					"titulo" => "Tipo proveedor actualizado",
+					"texto" => "Servicio " . $idservicio ." cerrado",
+					"icono" => "success"
+				];
+			} else {
+				$alerta = [
+					"tipo" => "simple",
+					"titulo" => "Ocurrió un error inesperado",
+					"texto" => "No hemos podido actualizar los datos del servicio " . $idservicio . ", por favor intente nuevamente",
+					"icono" => "error"
+				];
+			}
+		
+			return json_encode($alerta);
+		}	
 	}

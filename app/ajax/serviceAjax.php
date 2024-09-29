@@ -17,6 +17,9 @@
 		if($_POST['Modulo_Servicio']=="actualizarEmple"){
 			echo $servicio->actualizarServicioEmpleControlador();
 		}
+		if($_POST['Modulo_Servicio']=="cerrarSevicio"){
+			echo $servicio->cerrarServiciosControlador();
+		}
 		
 	}else{
 		session_destroy();
