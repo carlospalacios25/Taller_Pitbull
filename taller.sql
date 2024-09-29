@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-09-2024 a las 04:46:01
+-- Tiempo de generación: 29-09-2024 a las 22:41:59
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -64,14 +64,14 @@ CREATE TABLE `cliente` (
 
 INSERT INTO `cliente` (`cedula`, `nom_cliente`, `ape_cliente`, `telefono`, `direccion`) VALUES
 (3356241, 'ORLANDO', 'DIAZ', 36251459, 'CALLE'),
-(12556565, 'carlos', 'otro', 346657414, 'kra889898'),
+(12556565, 'carlos', 'Gomez', 346657414, 'kra889898'),
 (33426558, 'Maria Elena', 'Ortiz Zea', 3215478524, 'Caller 98 b sur 23  58'),
 (33435229, 'OLIMPIA', 'PALACIOS', 3046558748, 'CALLE 100 N° 26 -6'),
 (56513213, 'KAREN', 'GUTIERREZ ', 3546354535, 'JFSGJHSGJ'),
 (66571558, 'Carlos Julio', 'Tocarruncho Prieto', 3046654771, 'Kra 76 d # 62 i 22 sur'),
 (1000120253, 'CARLOS', 'PALACIOS', 304665477, 'CA 76 D # 62 22'),
 (1000257485, 'Luis Carlos', 'Castro', 3215428471, 'CALLE 90 A 94 G 11 BACHUE CASA'),
-(1000789064, 'Karen Yulieth', 'Mahecha', 3002083822, 'Diagonal 65'),
+(1000789064, 'Karen Yulieth', 'Mahecha Gutierrez', 3002083822, 'Diagonal 65'),
 (1511541512, 'karla', 'jimenes', 33222796730, 'CALLE 56 A 77 G 11 BACHUE CASA');
 
 -- --------------------------------------------------------
@@ -121,11 +121,12 @@ CREATE TABLE `empleado` (
 --
 
 INSERT INTO `empleado` (`documento_emp`, `nom_empleado`, `ape_empleado`, `direccion`, `telefono`, `id_cargos`) VALUES
-(2222, 'carlos', 'p', '5', 30465656565, 3),
-(625362, 'MARIO', 'MAHECHA', 'CALLE 76 D 58', 35121551, 3),
 (966544, 'KAREN', 'MENDEZ', 'CALLE 76 D 58', 631425, 1),
 (3356244, 'ANDRES', 'LOPEZ', 'KRA 76 D# 62 I 22 SUR', 30466547, 2),
-(1000120253, 'ANDRES', 'DIAZ', 'KRA 76 D# 62 I 22 SUR', 30466547, 2);
+(6253624, 'MARIO', 'MAHECHA', 'CALLE 76 D 58', 35121551, 3),
+(1000120253, 'ANDRES', 'DIAZ', 'KRA 76 D# 62 I 22 SUR', 30466547, 2),
+(1002254475, 'CARLOS HERNAN', 'Palacios', 'Calle 100 usaquen', 30465656565, 3),
+(1002457741, 'Juan Sebastian', 'Martinez', 'Calle 85 - 26 #87', 3134525474, 5);
 
 -- --------------------------------------------------------
 
@@ -194,9 +195,12 @@ INSERT INTO `producto` (`id_producto`, `nom_producto`, `codigo`, `descripcion`, 
 (1, 'ACITE 15 *50', '525D2DS', 'SOLO MOTO PEQUEÑA', 20000, 4),
 (2, 'TORNILLOS 14', '55DFD5S', 'PARA MOTORES', 500, 6),
 (3, 'FRENOS', 'F6221', 'MOTOS', 20000, 2),
-(4, 'Espejos', 'e95', 'ns', 60000, 2),
-(5, 'ESPEJOS', 'E545EF', 'PULSAR', 620000, 7),
-(6, 'Producto A', 'COD123', 'Descripción del producto A', 100, 50);
+(4, 'ESPEJO LUJOS', 'ESP98', 'ns', 60000, 2),
+(5, 'ESPEJOS PARA DOMINAR 400', 'E545EF', 'Estilo rápido con modelos de vietos', 150000, 7),
+(6, 'ACEITE 25 * 50', 'COD123', 'Descripción del producto A', 100, 50),
+(7, 'GUAYA DE CAMBIOS 180', 'GDEGGVV', 'Guaya para cambios moto', 25000, 0),
+(8, 'GUAYA DE FRENOS 180', '656584811S', 'Guaya para frenos de pulsar 180 5cm', 25000, 1),
+(9, 'FRENOS NKD 125', 'A6565S5S', 'Frenos sencillos', 15000, 1);
 
 -- --------------------------------------------------------
 
@@ -224,7 +228,7 @@ INSERT INTO `proveedor` (`documento_NIT`, `nom_proveedor`, `apellido_sociedad`, 
 (56453542, 'Motos Cortes', 'Sas', '73A BIS A sur #16Q 41', 3133303000, 5),
 (900560150, 'Taller De Motos Niches', 'Sas', 'CL 38 13 27', 3213267741, 3),
 (901405600, 'Bogota Bikers', 'Sas', 'KR 29 # 71 A - 28', 3002084578, 3),
-(901429637, 'Almacen Y Taller De Motos Mundo Apache', 'Ltda', 'CL 70 # 26 K - 06', 3005745896, 6),
+(901429637, 'Almacen Y Taller De Motos Mundo Apache', 'Ltda', 'CL 70 # 26 K - 06', 3005745896, 8),
 (901555532, 'Distribuciones Bajaj La Plata', 'Sas', 'CARRERA 3E NO. 7 - 35 AVENIDA LIBERTADORES', 6017452508, 2),
 (901575412, 'Comercializadora Vinmotors Nkd', 'Ltda', 'AV DEL LIBERTADOR NO 24 - 45 CC AQUARELA PLAZA LC 22', 3043487515, 3),
 (1000120253, 'Nene Motos', 'Sas', 'Carrera 74 # 108 - 14', 3985432279, 4),
@@ -238,8 +242,8 @@ INSERT INTO `proveedor` (`documento_NIT`, `nom_proveedor`, `apellido_sociedad`, 
 
 CREATE TABLE `servicios` (
   `id_servicios` int(10) NOT NULL,
-  `observaciones` varchar(200) NOT NULL,
-  `mantenimiento` varchar(70) NOT NULL,
+  `observaciones` varchar(1000) NOT NULL,
+  `mantenimiento` varchar(1000) NOT NULL,
   `cedula_cliente` int(10) DEFAULT NULL,
   `documento_emp` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -252,11 +256,23 @@ INSERT INTO `servicios` (`id_servicios`, `observaciones`, `mantenimiento`, `cedu
 (1, 'se realiza cambio de aciete', '', 1000120253, 1000120253),
 (2, 'se ajusta la moto', 'bien todo ok', 33435229, 966544),
 (3, 'Ser verifica la cantidad de acite', 'ok', 3356241, 1000120253),
-(4, 'verificacion del motor', 'ok', 1000120253, 1000120253),
-(5, 'ajuste de espejos', 'ok', 33435229, 3356244),
+(4, 'verificacion del motor', '', 1000120253, 6253624),
+(5, 'ajuste de espejos', '', 33435229, NULL),
 (6, 'Lavado del motor', 'ok limpia', 33435229, 966544),
 (7, 'ajuste a la moto', 'ok tornillos', 1000120253, 966544),
-(8, 'ajuste de frenos', 'limpia frenos', 1000120253, 1000120253);
+(8, 'ajuste de frenos', 'limpia frenos', 1000120253, NULL),
+(9, 'Realizar cambio de Aceite Moto pulsar 160, cambio de frenos delanteros como traseros, ajuste de guaya de cambios', '', 1000120253, 1002457741),
+(10, 'Cambiar sellin', '', 33435229, 1002254475),
+(11, 'Realizar cambio de aceite de frenos Moto gixer 250', '', 1511541512, NULL),
+(12, 'Realizar ajuste de moto, cambio kit de arrastre moto NS200', '', 66571558, NULL),
+(13, 'Se encuntra sonido raro en el motos, verificar rodamiento', '', 66571558, NULL),
+(14, 'Recargar bateria moto NKD 125', '', 1000257485, NULL),
+(15, 'Agregar baul a moto', '', 3356241, NULL),
+(16, 'Cambio de llanatas a moto Mt 03', '', 1000120253, NULL),
+(17, 'Cambio de frenos, refigerante fitro de aira', '', 1000120253, NULL),
+(18, 'Cambio de silla ´de moto, cambio de posapies, cambio de espejos, arreglo ajuste de motor', '', 33435229, NULL),
+(19, 'Solicitud de cambio de acite moto NKD 125, cambio de frenos delanteros y traseros, ajustar espejos', '', 1000789064, NULL),
+(20, 'Cambio manijar', '', 12556565, NULL);
 
 -- --------------------------------------------------------
 
@@ -420,13 +436,13 @@ ALTER TABLE `factura`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_producto` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `servicios`
 --
 ALTER TABLE `servicios`
-  MODIFY `id_servicios` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_servicios` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_proveedor`

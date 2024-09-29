@@ -89,8 +89,11 @@
                 </a>
                 <div class="navbar-dropdown is-boxed">
                     <a class="navbar-item" href="<?php echo APP_URL; ?>servicepend/">
-                        Pendiente Por asignar
-                    </a>      
+                        Pendiente Por Asignar
+                    </a>  
+                    <a class="navbar-item" href="<?php echo APP_URL; ?>serviceclose/">
+                        Pendiente Por Cerrar
+                    </a>    
                 </div>
             </div>
         </div>

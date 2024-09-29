@@ -301,4 +301,106 @@
 			// Devolver las opciones generadas
 			return $opciones;
 		}
+		public function listadoServiciosPendienteCerrarControlador($pagina, $registros, $url, $busqueda) {
+
+			$pagina = $this->limpiarCadena($pagina);
+			$registros = $this->limpiarCadena($registros);
+		
+			$url = $this->limpiarCadena($url);
+			$url = APP_URL . $url . "/";
+		
+			$busqueda = $this->limpiarCadena($busqueda);
+			$tabla = "";
+		
+			$pagina = (isset($pagina) && $pagina > 0) ? (int)$pagina : 1;
+			$inicio = ($pagina > 0) ? (($pagina * $registros) - $registros) : 0;
+		
+			if (isset($busqueda) && $busqueda != "") {
+				$consulta_datos = "SELECT * FROM servicios WHERE (cedula_cliente LIKE '%$busqueda%' OR documento_emp LIKE '%$busqueda%') ORDER BY id_servicios  ASC LIMIT $inicio, $registros";
+				$consulta_total = "SELECT COUNT(empleado) FROM servicios WHERE (documento_emp LIKE '%$busqueda%' OR documento_emp LIKE '%$busqueda%')";
+			} else {
+				$consulta_datos="SELECT servicios.id_servicios, servicios.observaciones, empleado.nom_empleado, empleado.ape_empleado 
+							FROM servicios
+							INNER JOIN empleado ON servicios.documento_emp = empleado.documento_emp 
+							WHERE servicios.documento_emp IS NOT NULL 
+							LIMIT $inicio, $registros;
+							";
+				$consulta_total = "SELECT COUNT(id_servicios) FROM servicios  WHERE documento_emp IS NULL";
+
+			}
+		
+			$datos = $this->ejecutarConsulta($consulta_datos);
+			$datos = $datos->fetchAll();
+		
+			$total = $this->ejecutarConsulta($consulta_total);
+			$total = (int)$total->fetchColumn();
+		
+			$numeroPaginas = ceil($total / $registros);
+		
+			$tabla .= '
+				<div class="table-container">
+				<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+					<thead>
+						<tr>
+							<th class="has-text-centered">#</th>
+							<th class="has-text-centered">Servicio</th>
+							<th class="has-text-centered">Mantenimiento</th>
+							<th class="has-text-centered">Empleado</th>
+							<th class="has-text-centered" colspan="3">Opciones</th>
+						</tr>
+					</thead>
+					<tbody>
+			';
+		
+			if ($total >= 1 && $pagina <= $numeroPaginas) {
+				$contador = $inicio + 1;
+				$pag_inicio = $inicio + 1;
+				foreach ($datos as $rows) {
+					$tabla .= '
+						<tr class="has-text-centered">
+							<td>' . $contador . '</td>
+							<td>' . $rows['id_servicios'] . '</td>
+							<td>' . $rows['observaciones'] .'</td>
+							<td>' . $rows['nom_empleado'] .' '. $rows['ape_empleado'].' </td>
+							<td>
+								<a href="' . APP_URL . 'serviceUpdateEmpl/' . $rows['id_servicios'] . '/" class="button is-success is-rounded is-small">Asignar</a>
+							</td>
+						</tr>
+					';
+					$contador++;
+				}
+				$pag_final = $contador - 1;
+			} else {
+				if ($total >= 1) {
+					$tabla .= '
+						<tr class="has-text-centered">
+							<td colspan="7">
+								<a href="' . $url . '1/" class="button is-link is-rounded is-small mt-4 mb-4">
+									Haga clic acá para recargar el listado
+								</a>
+							</td>
+						</tr>
+					';
+				} else {
+					$tabla .= '
+						<tr class="has-text-centered">
+							<td colspan="7">
+								No hay registros en el sistema
+							</td>
+						</tr>
+					';
+				}
+			}
+		
+			$tabla .= '</tbody></table></div>';
+		
+			### Paginacion ###
+			if ($total >= 1 && $pagina <= $numeroPaginas) {
+				$tabla .= '<p class="has-text-right">Servicios Pendiente Por Cerrar <strong>' . $pag_inicio . '</strong> al <strong>' . $pag_final . '</strong> de un <strong>total de ' . $total . '</strong></p>';
+		
+				$tabla .= $this->paginadorTablas($pagina, $numeroPaginas, $url, 10);
+			}
+		
+			return $tabla;
+		}
 	}
