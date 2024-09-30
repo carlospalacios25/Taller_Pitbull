@@ -96,6 +96,16 @@
                     </a>    
                 </div>
             </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link" href="#">
+                    Resgitar Compra
+                </a>
+                <div class="navbar-dropdown is-boxed">
+                    <a class="navbar-item" href="<?php echo APP_URL; ?>buysNew/">
+                        Registar Compra
+                    </a>    
+                </div>
+            </div>
         </div>
 
         <div class="navbar-end">
