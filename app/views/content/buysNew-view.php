@@ -1,78 +1,129 @@
-<div class="container is-fluid mb-6">
-    <h1 class="title">Compra</h1>
-    <h2 class="subtitle">Nueva Compra</h2>
-</div>
-
-<div class="container pb-6 pt-6">
-<form class="FormularioAjax" action="<?php echo APP_URL; ?>app/ajax/compraAjax.php" method="POST" autocomplete="off" enctype="multipart/form-data">
-
-    <input type="hidden" name="Modulo_Compra" value="registrar">
-
-    <div class="columns">
-        <div class="column">
-            <div class="control">
-                <label>ID Compra</label>
-                <input class="input" type="text" name="id_compra" maxlength="10" required>
-            </div>
-        </div>
-        <div class="column">
-            <div class="select is-normal">
-                <label>Selecion Producto</label>
-                <select name="doc_proveedor" id="doc_proveedor">
-                <option selected disabled value="">Selecione Proveedor</option>
-                    <?php
-                        use app\controllers\buysController; 
-                        $controlador = new buysController();
-                        echo $controlador->obtenerProveedor();
-                    ?>
-                </select>
-            </div>
-        </div>
-        <div class="column">
-            <div class="control">
-                <label>Fecha de Compra</label>
-                <input class="input" type="date" name="fecha_compra" required>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Aquí empieza la sección dinámica de productos -->
-    <div id="productos-container">
-        <div class="columns producto-item">
-            <div class="column">
-                <div class="select is-normal">
-                    <label>Selecion Producto</label>
-                    <select name="id_producto[]" id="id_producto">
-                    <option selected disabled value="">Selecione Producto</option>
-                        <?php
-                            $controlador = new buysController();
-                            echo $controlador->obtenerOpcionesProducto();
-                        ?>
-                    </select>
+<section class="section">
+        <div class="container">
+            <form class="FormularioAjax" action="<?php echo APP_URL; ?>app/ajax/compraAjax.php" method="POST" autocomplete="off" enctype="multipart/form-data">
+                <input type="hidden" name="Modulo_Compra" value="registrar">
+                
+                <div class="columns">
+                    <div class="column">
+                        <div class="box">
+                            <p class="title is-5">Detalles del cliente</p>
+                            <div class="select is-fullwidth">
+                                <select name="doc_proveedor" id="doc_proveedor">
+                                    <option selected disabled value="">Selecione Proveedor</option>
+                                    <?php
+                                        use app\controllers\buysController; 
+                                        $controlador = new buysController();
+                                        echo $controlador->obtenerProveedor();
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box">
+                            <p class="title is-5">ID Compra</p>
+                            <input class="input" type="text" name="id_compra" maxlength="10" required>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box">
+                            <p class="title is-5">Fecha de Compra</p>
+                            <input class="input" type="date" name="fecha_compra" required>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="column">
-                <div class="control">
-                    <label>Precio Total</label>
-                    <input class="input" type="text" name="precio_total[]" maxlength="20" required>
-                </div>
-            </div>
-            <div class="column">
-                <div class="control">
-                    <label>Cantidad</label>
-                    <input class="input" type="number" name="cantidad[]" maxlength="10" required>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <p class="has-text-centered">
-        <button type="button" id="agregar-producto" class="button is-success is-rounded">Agregar Producto</button>
-        <button type="reset" class="button is-link is-light is-rounded">Limpiar</button>
-        <button type="submit" class="button is-info is-rounded">Guardar</button>
-    </p>
-</form>
-</div>
 
-<script src="<?php echo APP_URL; ?>app/views/js/compra.js"></script>
+                <div class="box">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Precio unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productos-tbody">
+                            <tr class="producto-item">
+                                <td>
+                                    <div class="select is-fullwidth">
+                                        <select name="id_producto[]" class="producto-select">
+                                            <option selected disabled value="">Seleccione Producto</option>
+                                            <?php
+                                                echo $controlador->obtenerOpcionesProducto();
+                                            ?>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td><input class="input cantidad" type="number" name="cantidad[]" maxlength="10" required></td>
+                                <td><input class="input precio-unitario" type="number" step="0.01" name="precio_unitario[]" maxlength="20" required></td>
+                                <td><input class="input precio-total" type="text" name="precio_total[]" readonly></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" class="has-text-right">NETO $</th>
+                                <td id="neto">0.00</td>
+                            </tr>
+                            <tr>
+                                <th colspan="3" class="has-text-right">IVA (19%) $</th>
+                                <td id="iva">0.00</td>
+                            </tr>
+                            <tr>
+                                <th colspan="3" class="has-text-right">TOTAL $</th>
+                                <td id="total">0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="field is-grouped is-grouped-centered">
+                    <p class="control">
+                        <button type="button" id="agregar-producto" class="button is-success is-rounded">Agregar Producto</button>
+                    </p>
+                    <p class="control">
+                        <button type="reset" class="button is-link is-light is-rounded">Limpiar</button>
+                    </p>
+                    <p class="control">
+                        <button type="submit" class="button is-info is-rounded">Guardar</button>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tbody = document.getElementById('productos-tbody');
+            const agregarProductoBtn = document.getElementById('agregar-producto');
+
+            agregarProductoBtn.addEventListener('click', agregarProducto);
+            tbody.addEventListener('input', actualizarTotales);
+
+            function agregarProducto() {
+                const nuevaFila = tbody.rows[0].cloneNode(true);
+                nuevaFila.querySelectorAll('input').forEach(input => input.value = '');
+                nuevaFila.querySelector('select').selectedIndex = 0;
+                tbody.appendChild(nuevaFila);
+            }
+
+            function actualizarTotales() {
+                let neto = 0;
+                document.querySelectorAll('.producto-item').forEach(fila => {
+                    const cantidad = parseFloat(fila.querySelector('.cantidad').value) || 0;
+                    const precioUnitario = parseFloat(fila.querySelector('.precio-unitario').value) || 0;
+                    const total = (cantidad * precioUnitario) * 0.19 + (cantidad * precioUnitario);
+                    const totalSinIva = cantidad * precioUnitario
+                    fila.querySelector('.precio-total').value = total.toFixed(2);
+                    neto += totalSinIva;
+                });
+
+                const iva = neto * 0.19;
+                const totalGeneral = neto + iva;
+
+                document.getElementById('neto').textContent = neto.toFixed(2);
+                document.getElementById('iva').textContent = iva.toFixed(2);
+                document.getElementById('total').textContent = totalGeneral.toFixed(2);
+            }
+        });
+    </script>
