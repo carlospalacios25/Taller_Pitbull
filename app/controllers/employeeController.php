@@ -307,7 +307,7 @@
 			$apellidoEmple = $this->limpiarCadena($_POST['ape_empleado']);
 			$direccionEmple = $this->limpiarCadena($_POST['direccion']);
 			$telefonoEmple = $this->limpiarCadena($_POST['telefono']);
-			/*$tipoProve = isset($_POST['id_tipo_proveedor']) ? $this->limpiarCadena($_POST['id_tipo_proveedor']) : NULL;*/
+			$tipoCargo = isset($_POST['id_cargos']) ? $this->limpiarCadena($_POST['id_cargos']) : NULL;
 
 		    # Verificando campos obligatorios #
 		    if($documentoEmple=="" || $nombreEmple==""|| $apellidoEmple==""|| $direccionEmple==""|| $telefonoEmple==""){
@@ -363,11 +363,11 @@
 					"campo_marcador" => ":Telefono",
 					"campo_valor" => $telefonoEmple
 				],
-				/*[
-					"campo_nombre" => "id_tipo_proveedor",
+				[
+					"campo_nombre" => "id_cargos",
 					"campo_marcador" => ":Tipo",
-					"campo_valor" => $tipoProve
-				],*/
+					"campo_valor" => $tipoCargo
+				],
 
 			];
 

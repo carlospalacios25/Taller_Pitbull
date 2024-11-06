@@ -1,6 +1,6 @@
-<div class="container is-fluid mb-6">
+<!<div class="container is-fluid mb-6">
 	<h1 class="title">Proveedor</h1>
-	          <a href="<?php echo APP_URL; ?>app/views/fpdf/PruebaVP.php" target="_blank" class="button is-primary is-outlined">Generar Reporte General</a>
+	    <!--<a href="<?php echo APP_URL; ?>app/views/fpdf/PruebaVP.php" target="_blank" class="button is-primary is-outlined">Generar Reporte General</a>-->
         
 </div>
 

@@ -37,7 +37,7 @@ use app\controllers\supplierController;
             </div>
             <div class="column">
                 <div class="control">
-                    <label>Nombre Proveedor</label>
+                    <label>Nombre Cliente</label>
                     <input class="input" type="text" name="nom_empleado" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,40}" maxlength="70" value="<?php echo $datos['nom_empleado']; ?>" required>
                 </div>
             </div>
@@ -45,7 +45,7 @@ use app\controllers\supplierController;
         <div class="columns">
             <div class="column">
                 <div class="control">
-                    <label>Apellido (Razon Social)</label>
+                    <label>Apellidos</label>
                     <input class="input" type="text" name="ape_empleado" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,40}" maxlength="75" value="<?php echo $datos['ape_empleado']; ?>" required>
                 </div>
             </div>

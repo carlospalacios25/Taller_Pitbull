@@ -16,7 +16,10 @@
 			// Almacenando datos de productos (arrays)
 			$productos = isset($_POST['id_producto']) ? $_POST['id_producto'] : [];
 			$precios = isset($_POST['precio_total']) ? $_POST['precio_total'] : [];
+			$preciounitario = isset($_POST['precio_unitario']) ? $_POST['precio_unitario'] : [];
+			$impuesto = isset($_POST['impuesto_iva']) ? $_POST['impuesto_iva'] : [];
 			$cantidades = isset($_POST['cantidad']) ? $_POST['cantidad'] : [];
+			
 			
 			// Verificando campos obligatorios
 			if ($id_compra == "" || $doc_proveedor == "" || $fecha_compra == "") {
@@ -68,6 +71,16 @@
 							"campo_nombre" => "id_producto",
 							"campo_marcador" => ":IdProducto",
 							"campo_valor" => $producto
+						],
+						[
+							"campo_nombre" => "precio_unitario",
+							"campo_marcador" => ":PrecioUnitario",
+							"campo_valor" => $preciounitario
+						],
+						[
+							"campo_nombre" => "impuesto_iva",
+							"campo_marcador" => ":Impuesto",
+							"campo_valor" => $impuesto
 						],
 						[
 							"campo_nombre" => "precio_total",

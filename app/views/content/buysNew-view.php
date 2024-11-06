@@ -40,6 +40,7 @@
                                 <th>Descripción</th>
                                 <th>Cantidad</th>
                                 <th>Precio unitario</th>
+                                <th>% IVA</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
@@ -56,7 +57,8 @@
                                     </div>
                                 </td>
                                 <td><input class="input cantidad" type="number" name="cantidad[]" maxlength="10" required></td>
-                                <td><input class="input precio-unitario" type="number" step="0.01" name="precio_unitario[]" maxlength="20" required></td>
+                                <td><input class="input precio_unitario" type="number" step="0.01" name="precio_unitario[]" maxlength="20" required></td>
+                                <td><input class="input impuesto_iva" type="number" step="0.01" name="impuesto_iva[]" maxlength="20" required></td>
                                 <td><input class="input precio-total" type="text" name="precio_total[]" readonly></td>
                             </tr>
                         </tbody>
@@ -66,7 +68,7 @@
                                 <td id="neto">0.00</td>
                             </tr>
                             <tr>
-                                <th colspan="3" class="has-text-right">IVA (19%) $</th>
+                                <th colspan="3" class="has-text-right">IVA (%) $</th>
                                 <td id="iva">0.00</td>
                             </tr>
                             <tr>
@@ -94,36 +96,43 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const tbody = document.getElementById('productos-tbody');
-            const agregarProductoBtn = document.getElementById('agregar-producto');
+        const tbody = document.getElementById('productos-tbody');
+        const agregarProductoBtn = document.getElementById('agregar-producto');
 
-            agregarProductoBtn.addEventListener('click', agregarProducto);
-            tbody.addEventListener('input', actualizarTotales);
+        agregarProductoBtn.addEventListener('click', agregarProducto);
+        tbody.addEventListener('input', actualizarTotales);
 
-            function agregarProducto() {
-                const nuevaFila = tbody.rows[0].cloneNode(true);
-                nuevaFila.querySelectorAll('input').forEach(input => input.value = '');
-                nuevaFila.querySelector('select').selectedIndex = 0;
-                tbody.appendChild(nuevaFila);
-            }
+        function agregarProducto() {
+        const nuevaFila = tbody.rows[0].cloneNode(true);
+        nuevaFila.querySelectorAll('input').forEach(input => input.value = '');
+        nuevaFila.querySelector('select').selectedIndex = 0;
+        tbody.appendChild(nuevaFila);
+        }
 
-            function actualizarTotales() {
-                let neto = 0;
-                document.querySelectorAll('.producto-item').forEach(fila => {
-                    const cantidad = parseFloat(fila.querySelector('.cantidad').value) || 0;
-                    const precioUnitario = parseFloat(fila.querySelector('.precio-unitario').value) || 0;
-                    const total = (cantidad * precioUnitario) * 0.19 + (cantidad * precioUnitario);
-                    const totalSinIva = cantidad * precioUnitario
-                    fila.querySelector('.precio-total').value = total.toFixed(2);
-                    neto += totalSinIva;
-                });
+        function actualizarTotales() {
+        let neto = 0;
+        let totalIVA = 0;
 
-                const iva = neto * 0.19;
-                const totalGeneral = neto + iva;
+        document.querySelectorAll('.producto-item').forEach(fila => {
+            const cantidad = parseFloat(fila.querySelector('.cantidad').value) || 0;
+            const precioUnitario = parseFloat(fila.querySelector('.precio-unitario').value) || 0;
+            const porcentajeIVA = parseFloat(fila.querySelector('.impuesto_iva').value) || 0;
 
-                document.getElementById('neto').textContent = neto.toFixed(2);
-                document.getElementById('iva').textContent = iva.toFixed(2);
-                document.getElementById('total').textContent = totalGeneral.toFixed(2);
-            }
+            const subtotal = cantidad * precioUnitario;
+            const ivaCalculado = subtotal * (porcentajeIVA / 100);
+            const totalConIVA = subtotal + ivaCalculado;
+
+            fila.querySelector('.precio-total').value = totalConIVA.toFixed(2);
+
+            neto += subtotal;
+            totalIVA += ivaCalculado;
+        });
+
+        const totalGeneral = neto + totalIVA;
+
+        document.getElementById('neto').textContent = neto.toFixed(2);
+        document.getElementById('iva').textContent = totalIVA.toFixed(2);
+        document.getElementById('total').textContent = totalGeneral.toFixed(2);
+        }
         });
     </script>

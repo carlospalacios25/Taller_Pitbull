@@ -280,7 +280,7 @@
 			if ($busqueda != "") {
 				$consulta_datos = "SELECT * FROM cargos WHERE (id_cargos LIKE :busqueda OR tipo_cargo LIKE :busqueda) ORDER BY id_cargos ASC";
 			} else {
-				$consulta_datos = "SELECT * FROM empleado ORDER BY documento_emp  ASC";
+				$consulta_datos = "SELECT e.*, cargos.tipo_cargo FROM empleado e JOIN cargos ON e.id_cargos = cargos.id_cargos WHERE cargos.tipo_cargo LIKE '%Mecanico%' ORDER BY e.documento_emp ASC;";
 			}
 			
 			$stmt = $this->ejecutarConsulta($consulta_datos);
