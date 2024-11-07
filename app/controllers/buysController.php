@@ -5,6 +5,12 @@
 	use Exception;
 
 	class buysController extends mainModel{
+		private $model;
+
+		public function __construct() {
+			// Inicializa el modelo para acceder a la conexión
+			$this->model = new mainModel();
+		}
 
 		/*----------  Controlador registrar  ----------*/
 		public function registrarCompraControlador() {
@@ -49,6 +55,8 @@
 					$producto = $this->limpiarCadena($productos[$i]);
 					$precio = $this->limpiarCadena($precios[$i]);
 					$cantidad = $this->limpiarCadena($cantidades[$i]);
+					$precioUni = $this->limpiarCadena($preciounitario[$i]);
+					$Impue = $this->limpiarCadena($impuesto[$i]);
 		
 					// Datos a registrar para cada producto
 					$compra_reg = [
@@ -75,12 +83,12 @@
 						[
 							"campo_nombre" => "precio_unitario",
 							"campo_marcador" => ":PrecioUnitario",
-							"campo_valor" => $preciounitario
+							"campo_valor" => $precioUni
 						],
 						[
 							"campo_nombre" => "impuesto_iva",
 							"campo_marcador" => ":Impuesto",
-							"campo_valor" => $impuesto
+							"campo_valor" => $Impue
 						],
 						[
 							"campo_nombre" => "precio_total",
@@ -120,7 +128,6 @@
 			return json_encode($alerta);
 		}
 	
-			
 		/*----------  Controlador listar   ----------*/
 		public function listarProveedorControlador($pagina, $registros, $url, $busqueda) {
 
@@ -268,5 +275,29 @@
 			// Devolver las opciones generadas
 			return $opciones;
 		}
+
+
+		public function obtenerPrecioProducto($id_producto) {
+			// Limpiar el valor del parámetro
+			$id_producto = $this->model->limpiarCadena($id_producto);  
+	
+			// Usar la conexión proporcionada por el modelo
+			$consulta_datos = "SELECT precio_unitario FROM producto WHERE id_producto = :id_producto";
+	
+			// Obtener la conexión PDO
+			$pdo = $this->model->conectar();
+	
+			// Preparar y ejecutar la consulta
+			$stmt = $pdo->prepare($consulta_datos);
+			$stmt->bindValue(':id_producto', $id_producto, \PDO::PARAM_INT);  // Asegúrate de usar \PDO en lugar de PDO
+			$stmt->execute();
+	
+			// Obtener el resultado
+			$resultado = $stmt->fetch(\PDO::FETCH_ASSOC);  // Asegúrate de usar \PDO
+	
+			// Verificar si hay resultados
+			return $resultado ? $resultado['precio_unitario'] : 0;
+		}
+		
 		
 	}

@@ -6,7 +6,7 @@
                 <div class="columns">
                     <div class="column">
                         <div class="box">
-                            <p class="title is-5">Detalles del cliente</p>
+                            <p class="title is-5">Detalle del Proveedor</p>
                             <div class="select is-fullwidth">
                                 <select name="doc_proveedor" id="doc_proveedor">
                                     <option selected disabled value="">Selecione Proveedor</option>
@@ -59,7 +59,7 @@
                                 <td><input class="input cantidad" type="number" name="cantidad[]" maxlength="10" required></td>
                                 <td><input class="input precio_unitario" type="number" step="0.01" name="precio_unitario[]" maxlength="20" required></td>
                                 <td><input class="input impuesto_iva" type="number" step="0.01" name="impuesto_iva[]" maxlength="20" required></td>
-                                <td><input class="input precio-total" type="text" name="precio_total[]" readonly></td>
+                                <td><input class="input precio_total" type="text" name="precio_total[]" readonly></td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -96,43 +96,96 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        const tbody = document.getElementById('productos-tbody');
-        const agregarProductoBtn = document.getElementById('agregar-producto');
+            const tbody = document.getElementById('productos-tbody');
+            const agregarProductoBtn = document.getElementById('agregar-producto');
+            const limpiarBtn = document.querySelector('button[type="reset"]'); // Seleccionamos el botón de limpiar
 
-        agregarProductoBtn.addEventListener('click', agregarProducto);
-        tbody.addEventListener('input', actualizarTotales);
+            agregarProductoBtn.addEventListener('click', agregarProducto);
+            tbody.addEventListener('input', actualizarTotales);
 
-        function agregarProducto() {
-        const nuevaFila = tbody.rows[0].cloneNode(true);
-        nuevaFila.querySelectorAll('input').forEach(input => input.value = '');
-        nuevaFila.querySelector('select').selectedIndex = 0;
-        tbody.appendChild(nuevaFila);
-        }
+            // Delegar el evento change para los selectores de productos
+            tbody.addEventListener('change', function(event) {
+                if (event.target.classList.contains('producto-select')) {
+                    const productoId = event.target.value;
 
-        function actualizarTotales() {
-        let neto = 0;
-        let totalIVA = 0;
+                    // Hacer la llamada AJAX para obtener el precio del producto
+                    if (productoId) {
+                        fetch(`<?php echo APP_URL; ?>app/ajax/getProductPrice.php?id_producto=${productoId}`)
+                            .then(response => response.text())  // Cambiar a 'text' para ver la respuesta sin procesar
+                            .then(data => {
+                                try {
+                                    const jsonData = JSON.parse(data);  // Intentar convertirlo a JSON
+                                    if (jsonData.precio_unitario) {
+                                        const precioUnitarioInput = event.target.closest('tr').querySelector('.precio_unitario');
+                                        precioUnitarioInput.value = jsonData.precio_unitario;
+                                    }
+                                } catch (e) {
+                                    console.error('No se pudo procesar JSON', e);
+                                }
+                            })
+                            .catch(error => console.error('Error al obtener el precio:', error));
+                    }
+                }
+            });
 
-        document.querySelectorAll('.producto-item').forEach(fila => {
-            const cantidad = parseFloat(fila.querySelector('.cantidad').value) || 0;
-            const precioUnitario = parseFloat(fila.querySelector('.precio-unitario').value) || 0;
-            const porcentajeIVA = parseFloat(fila.querySelector('.impuesto_iva').value) || 0;
+            formulario.addEventListener('submit', function(event) {
+                event.preventDefault();
 
-            const subtotal = cantidad * precioUnitario;
-            const ivaCalculado = subtotal * (porcentajeIVA / 100);
-            const totalConIVA = subtotal + ivaCalculado;
+                const filas = tbody.querySelectorAll('.producto-item');
+                for (let i = 1; i < filas.length; i++) {
+                    filas[i].remove(); 
+                }
 
-            fila.querySelector('.precio-total').value = totalConIVA.toFixed(2);
+                formulario.reset();
+            });
 
-            neto += subtotal;
-            totalIVA += ivaCalculado;
+            function agregarProducto() {
+                const nuevaFila = tbody.rows[0].cloneNode(true);
+                nuevaFila.querySelectorAll('input').forEach(input => input.value = '');
+                nuevaFila.querySelector('select').selectedIndex = 0;
+                tbody.appendChild(nuevaFila);
+            }
+
+            limpiarBtn.addEventListener('click', function() {
+                const form = document.querySelector('form');
+                form.reset();
+
+                const filas = tbody.querySelectorAll('.producto-item');
+                for (let i = 1; i < filas.length; i++) { 
+                    filas[i].remove();
+                }
+                
+
+                document.getElementById('neto').textContent = '0.00';
+                document.getElementById('iva').textContent = '0.00';
+                document.getElementById('total').textContent = '0.00';
+            });
+
+            function actualizarTotales() {
+                let neto = 0;
+                let totalIVA = 0;
+
+                document.querySelectorAll('.producto-item').forEach(fila => {
+                    const cantidad = parseFloat(fila.querySelector('.cantidad').value) || 0;
+                    const precioUnitario = parseFloat(fila.querySelector('.precio_unitario').value) || 0;
+                    const porcentajeIVA = parseFloat(fila.querySelector('.impuesto_iva').value) || 0;
+
+                    const subtotal = cantidad * precioUnitario;
+                    const ivaCalculado = subtotal * (porcentajeIVA / 100);
+                    const totalConIVA = subtotal + ivaCalculado;
+
+                    fila.querySelector('.precio_total').value = totalConIVA.toFixed(2);
+
+                    neto += subtotal;
+                    totalIVA += ivaCalculado;
+                });
+
+                const totalGeneral = neto + totalIVA;
+
+                document.getElementById('neto').textContent = neto.toFixed(2);
+                document.getElementById('iva').textContent = totalIVA.toFixed(2);
+                document.getElementById('total').textContent = totalGeneral.toFixed(2);
+            }
         });
-
-        const totalGeneral = neto + totalIVA;
-
-        document.getElementById('neto').textContent = neto.toFixed(2);
-        document.getElementById('iva').textContent = totalIVA.toFixed(2);
-        document.getElementById('total').textContent = totalGeneral.toFixed(2);
-        }
-        });
+       
     </script>
