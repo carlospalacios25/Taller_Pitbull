@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-09-2024 a las 22:41:59
+-- Tiempo de generación: 07-11-2024 a las 04:24:31
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -39,9 +39,9 @@ CREATE TABLE `cargos` (
 INSERT INTO `cargos` (`id_cargos`, `tipo_cargo`) VALUES
 (1, 'Mecanico I'),
 (2, 'Contador'),
-(3, 'Auxiliar II'),
-(4, 'Mecanico'),
-(5, 'Ayudante II'),
+(3, 'Auxiliar Mecanico I'),
+(4, 'Mecanico II'),
+(5, 'Auxiliar Administrativo I'),
 (6, 'Revisor Fiscal');
 
 -- --------------------------------------------------------
@@ -63,16 +63,17 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`cedula`, `nom_cliente`, `ape_cliente`, `telefono`, `direccion`) VALUES
-(3356241, 'ORLANDO', 'DIAZ', 36251459, 'CALLE'),
-(12556565, 'carlos', 'Gomez', 346657414, 'kra889898'),
-(33426558, 'Maria Elena', 'Ortiz Zea', 3215478524, 'Caller 98 b sur 23  58'),
-(33435229, 'OLIMPIA', 'PALACIOS', 3046558748, 'CALLE 100 N° 26 -6'),
-(56513213, 'KAREN', 'GUTIERREZ ', 3546354535, 'JFSGJHSGJ'),
-(66571558, 'Carlos Julio', 'Tocarruncho Prieto', 3046654771, 'Kra 76 d # 62 i 22 sur'),
-(1000120253, 'CARLOS', 'PALACIOS', 304665477, 'CA 76 D # 62 22'),
+(3356241, 'Orlando', 'Diaz Guerrero', 3215547862, 'CRA 3 # 160 D - 24 INT CRA 3 # 160 D - 24 INT 1'),
+(12556565, 'Carlos Julio', 'Gomez Perez', 3466574147, 'CRA 1 C # 160 D - 29'),
+(33426558, 'Maria Elena', 'Ortiz Zea', 3215478524, 'Calle 98 b sur 23  58'),
+(33435229, 'Claudio', 'Prieto Ostos', 3046558748, 'CALLE 100 N° 26 -6'),
+(56513213, 'Karen', 'Gutierrez', 3546354535, 'KR 10 # 165A-24 INT 10'),
+(66571558, 'Julio', 'Mendez Diaz', 3046654771, 'Kra 76 d # 62 i 22 sur'),
+(1000120253, 'Diego Alejandro', 'Hernandez', 3046654745, 'CA 76 D # 62 22'),
 (1000257485, 'Luis Carlos', 'Castro', 3215428471, 'CALLE 90 A 94 G 11 BACHUE CASA'),
-(1000789064, 'Karen Yulieth', 'Mahecha Gutierrez', 3002083822, 'Diagonal 65'),
-(1511541512, 'karla', 'jimenes', 33222796730, 'CALLE 56 A 77 G 11 BACHUE CASA');
+(1000789064, 'Karen Yulieth', 'Mahecha Gutierrez', 3002083822, 'Diagonal 65 - 87 sur 95'),
+(1002457852, 'Johana', 'Alarcon Aguirre', 321004751, 'KR3 # 160C-24 IN 1'),
+(1511541512, 'karla', 'jimenes', 3322279673, 'CALLE 56 A 77 G 11 BACHUE CASA');
 
 -- --------------------------------------------------------
 
@@ -85,21 +86,33 @@ CREATE TABLE `compra` (
   `id_compra` varchar(20) NOT NULL,
   `doc_proveedor` bigint(15) NOT NULL,
   `id_producto` int(10) NOT NULL,
-  `precio_total` double NOT NULL,
   `fecha_compra` date NOT NULL,
-  `cantidad` int(10) NOT NULL
+  `cantidad` int(10) NOT NULL,
+  `precio_unitario` double NOT NULL,
+  `impuesto_iva` double(10,2) NOT NULL,
+  `precio_total` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `compra`
 --
 
-INSERT INTO `compra` (`id_compra_cons`, `id_compra`, `doc_proveedor`, `id_producto`, `precio_total`, `fecha_compra`, `cantidad`) VALUES
-(1, 'FAC-857145', 666514, 1, 26600, '2023-07-18', 6),
-(2, 'FAC-857145', 666514, 2, 5345.54, '2023-06-29', 1),
-(3, 'FAC-857143', 666514, 1, 2000, '2023-06-15', 2),
-(4, 'FAC-857147', 666514, 1, 700000, '2024-06-14', 5),
-(5, 'MD-7517', 56453542, 3, 700000, '2024-06-14', 6);
+INSERT INTO `compra` (`id_compra_cons`, `id_compra`, `doc_proveedor`, `id_producto`, `fecha_compra`, `cantidad`, `precio_unitario`, `impuesto_iva`, `precio_total`) VALUES
+(1, 'FAC-857145', 666514, 1, '2023-07-18', 6, 26600, 19.00, 31624),
+(2, 'FAC-857145', 666514, 2, '2023-06-29', 1, 5345.54, 0.00, 5345.54);
+
+--
+-- Disparadores `compra`
+--
+DELIMITER $$
+CREATE TRIGGER `actualizar_existencia_compra` AFTER INSERT ON `compra` FOR EACH ROW BEGIN
+    -- Actualiza la columna existencias en la tabla productos
+    UPDATE producto
+    SET existencias = existencias + NEW.cantidad
+    WHERE id_producto = NEW.id_producto;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -121,11 +134,11 @@ CREATE TABLE `empleado` (
 --
 
 INSERT INTO `empleado` (`documento_emp`, `nom_empleado`, `ape_empleado`, `direccion`, `telefono`, `id_cargos`) VALUES
-(966544, 'KAREN', 'MENDEZ', 'CALLE 76 D 58', 631425, 1),
-(3356244, 'ANDRES', 'LOPEZ', 'KRA 76 D# 62 I 22 SUR', 30466547, 2),
-(6253624, 'MARIO', 'MAHECHA', 'CALLE 76 D 58', 35121551, 3),
-(1000120253, 'ANDRES', 'DIAZ', 'KRA 76 D# 62 I 22 SUR', 30466547, 2),
-(1002254475, 'CARLOS HERNAN', 'Palacios', 'Calle 100 usaquen', 30465656565, 3),
+(966544, 'Yulithe', 'Osma', 'CALLE 76 # 87 D 58', 3215441425, 2),
+(3356244, 'Andres', 'Lopez Lopez', 'KRA 76 D# 62 I 22 SUR', 3046654778, 4),
+(6253624, 'Mario Alejandro', 'Mahecha', 'CALLE 76 D # 87 58', 3215474584, 1),
+(1000120253, 'Andres', 'Diaz Cartes', 'KRA 76 D# 62 I 22 SUR', 3046654785, 3),
+(1002254475, 'Carlos', 'Galindo Gomez', 'Kra 76 D# 62 I 22 SUR', 3046565656, 6),
 (1002457741, 'Juan Sebastian', 'Martinez', 'Calle 85 - 26 #87', 3134525474, 5);
 
 -- --------------------------------------------------------
@@ -158,13 +171,16 @@ INSERT INTO `factura` (`id_factura`, `num_fac_serv`, `id_servicio`, `id_producto
 (7, 'PTB-002', 7, 2, 2000000, 0, '2023-07-07 05:00:00', 1),
 (8, 'PTB-001', 8, 3, 70000, 0, '2023-07-06 05:00:00', 1),
 (9, 'PTB-006', 2, 3, 200000, 0, '2023-07-18 05:00:00', 2),
-(10, 'PTB-002', 7, 1, 700000, 0, '2024-06-13 05:00:00', 2);
+(10, 'PTB-002', 7, 1, 700000, 0, '2024-06-13 05:00:00', 2),
+(11, 'PTB-008', 15, 1, 152000, 0, '2024-11-07 03:20:54', 1),
+(12, '', 6, 1, 0, 0, NULL, 2);
 
 --
 -- Disparadores `factura`
 --
 DELIMITER $$
-CREATE TRIGGER `actualizar_existencias` AFTER INSERT ON `factura` FOR EACH ROW BEGIN
+CREATE TRIGGER `actualizar_existencias_factura` AFTER INSERT ON `factura` FOR EACH ROW BEGIN
+    -- Actualiza la columna existencias en la tabla productos
     UPDATE producto
     SET existencias = existencias - NEW.cantidad
     WHERE id_producto = NEW.id_producto;
@@ -192,15 +208,16 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`id_producto`, `nom_producto`, `codigo`, `descripcion`, `precio_unitario`, `existencias`) VALUES
-(1, 'ACITE 15 *50', '525D2DS', 'SOLO MOTO PEQUEÑA', 20000, 4),
-(2, 'TORNILLOS 14', '55DFD5S', 'PARA MOTORES', 500, 6),
-(3, 'FRENOS', 'F6221', 'MOTOS', 20000, 2),
-(4, 'ESPEJO LUJOS', 'ESP98', 'ns', 60000, 2),
+(1, 'ACITE 15 *50', '525D2DS', 'SOLO MOTO PEQUEÑA', 20000, 9),
+(2, 'TORNILLOS 14', '55DFD5S', 'PARA MOTORES', 500, 0),
+(3, 'FRENOS', 'F6221', 'MOTOS', 20000, 1),
+(4, 'ESPEJO LUJOS', 'ESP98', 'NS', 60000, 2),
 (5, 'ESPEJOS PARA DOMINAR 400', 'E545EF', 'Estilo rápido con modelos de vietos', 150000, 7),
 (6, 'ACEITE 25 * 50', 'COD123', 'Descripción del producto A', 100, 50),
 (7, 'GUAYA DE CAMBIOS 180', 'GDEGGVV', 'Guaya para cambios moto', 25000, 0),
 (8, 'GUAYA DE FRENOS 180', '656584811S', 'Guaya para frenos de pulsar 180 5cm', 25000, 1),
-(9, 'FRENOS NKD 125', 'A6565S5S', 'Frenos sencillos', 15000, 1);
+(9, 'FRENOS NKD 125', 'A6565S5S', 'Frenos sencillos', 15000, 1),
+(10, 'Mano de obra', 'No aplica', 'Mano de obra personal', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -222,8 +239,8 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`documento_NIT`, `nom_proveedor`, `apellido_sociedad`, `direccion`, `telefono`, `id_tipo_proveedor`) VALUES
-(336224, 'Sociedad de talleres', 'Sas', 'KRA 26 D 96', 3046654771, 4),
-(666514, 'Moto Services', 'Sas', 'KR 45 # 120 - 71', 3218957521, 1),
+(336224, 'Sociedad de talleres', 'Sas', 'KRA 26 D 96', 3046654771, 7),
+(666514, 'Moto Services', 'Sas', 'KR 45 # 120 - 71', 3218957521, 2),
 (33435229, 'Centro De Servicios Juan Motos', ' SAS', 'KR 30 # 63 C - 50', 3358764988, 2),
 (56453542, 'Motos Cortes', 'Sas', '73A BIS A sur #16Q 41', 3133303000, 5),
 (900560150, 'Taller De Motos Niches', 'Sas', 'CL 38 13 27', 3213267741, 3),
@@ -253,14 +270,14 @@ CREATE TABLE `servicios` (
 --
 
 INSERT INTO `servicios` (`id_servicios`, `observaciones`, `mantenimiento`, `cedula_cliente`, `documento_emp`) VALUES
-(1, 'se realiza cambio de aciete', '', 1000120253, 1000120253),
-(2, 'se ajusta la moto', 'bien todo ok', 33435229, 966544),
-(3, 'Ser verifica la cantidad de acite', 'ok', 3356241, 1000120253),
+(1, 'se realiza cambio de aciete', '', 1000120253, 6253624),
+(2, 'se ajusta la moto', '', 33435229, 966544),
+(3, 'Ser verifica la cantidad de acite', '', 3356241, 1000120253),
 (4, 'verificacion del motor', '', 1000120253, 6253624),
-(5, 'ajuste de espejos', '', 33435229, NULL),
-(6, 'Lavado del motor', 'ok limpia', 33435229, 966544),
-(7, 'ajuste a la moto', 'ok tornillos', 1000120253, 966544),
-(8, 'ajuste de frenos', 'limpia frenos', 1000120253, NULL),
+(5, 'Ajuste de espejos', '', 33435229, 6253624),
+(6, 'Lavado del motor', '', 33435229, 966544),
+(7, 'ajuste a la moto', '', 1000120253, 966544),
+(8, 'ajuste de frenos', '', 1000120253, NULL),
 (9, 'Realizar cambio de Aceite Moto pulsar 160, cambio de frenos delanteros como traseros, ajuste de guaya de cambios', '', 1000120253, 1002457741),
 (10, 'Cambiar sellin', '', 33435229, 1002254475),
 (11, 'Realizar cambio de aceite de frenos Moto gixer 250', '', 1511541512, NULL),
@@ -301,17 +318,6 @@ INSERT INTO `tipo_proveedor` (`id_tipo_proveedor`, `tipo_proveedor`, `descripcio
 (8, 'Zinc', 'Prueba Unitaria Del zinc'),
 (9, 'Arreglado', 'OK arreglado');
 
---
--- Disparadores `tipo_proveedor`
---
-DELIMITER $$
-CREATE TRIGGER `after_tipo_proveedor_delete` AFTER DELETE ON `tipo_proveedor` FOR EACH ROW BEGIN
-    INSERT INTO tipo_proveedor_logs (action, id_tipo_proveedor, tipo_proveedor, descripcion)
-    VALUES ('DELETE', OLD.id_tipo_proveedor, OLD.tipo_proveedor, OLD.descripcion);
-END
-$$
-DELIMITER ;
-
 -- --------------------------------------------------------
 
 --
@@ -335,8 +341,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`usuario_id`, `usuario_nombre`, `usuario_apellido`, `usuario_email`, `usuario_usuario`, `usuario_clave`, `usuario_foto`, `usuario_creado`, `usuario_actualizado`) VALUES
-(1, 'Carlos Hernan', 'Tocarruncho Palacios', 'carlos.tocarruncho2001@gmail.com', 'CarlosTop', '$2y$10$uM.ZKJYxGDyL1Xdj0neYYO9lm4LFKnX2GbSref9aT05XHy85aqeqq', 'Carlos_Hernan_15.jpg', '2024-08-04 22:10:17', '2024-08-13 00:31:41'),
-(3, 'Mario Alejandro', 'Gutierrez Mahecha', 'Marios.Alejandro@gmail.com', 'MarioBros', '$2y$10$kYL2OELdfngK2ummQSTjK.g0jEE0j.d4kVTAGxoqV1Sl.3oVvliBm', 'Mario_Alejandro_19.jpg', '2024-08-04 22:30:16', '2024-08-13 00:36:25');
+(1, 'Carlos Hernan', 'Tocarruncho Palacios', 'carlos.tocarruncho2001@gmail.com', 'CarlosTop', '$2y$10$uM.ZKJYxGDyL1Xdj0neYYO9lm4LFKnX2GbSref9aT05XHy85aqeqq', 'Carlos_Hernan_15.jpg', '2024-08-04 22:10:17', '2024-08-13 00:31:41');
 
 --
 -- Índices para tablas volcadas
@@ -424,19 +429,19 @@ ALTER TABLE `cargos`
 -- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `id_compra_cons` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_compra_cons` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `factura`
 --
 ALTER TABLE `factura`
-  MODIFY `id_factura` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_factura` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_producto` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `servicios`
